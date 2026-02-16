@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Production/Build
+frontend/build/
+backend/build/
+backend/dist/
+dist/
+
+# Logs
+*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Environment
+.env
+.env*.local
+**/.env*.local
+**/.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+.vercel
+**/backups/
+**/uploads/
+.eslintcache
+.next
+.cache
+.pnpm-debug.log*
+.yarn-integrity
+
+.vercel
