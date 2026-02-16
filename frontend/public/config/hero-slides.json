@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "url": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&q=80",
+        "title": "Find 100s of motivated sellers at few clicks",
+        "subtitle": "Never let the lack of information stops you from closing deals",
+        "order": 1
+    },
+    {
+        "id": 2,
+        "url": "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=1920&q=80",
+        "title": "Want basket full of sales lead today?",
+        "subtitle": "Hundreds and thousands of distressed sellers are just waiting for you to sell their home.",
+        "order": 2
+    },
+    {
+        "id": 3,
+        "url": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80",
+        "title": "Sellers are waiting to sell their property.",
+        "subtitle": "Finding the right seller doesn't have to be hard. We make it easy for you.",
+        "order": 3
+    }
+]

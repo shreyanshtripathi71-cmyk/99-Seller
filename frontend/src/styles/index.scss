@@ -1,0 +1,96 @@
+@import "~bootstrap/scss/bootstrap";
+@import "react-toastify/dist/ReactToastify.css";
+@import 'node_modules/react-modal-video/scss/modal-video.scss';
+@import "slick-carousel/slick/slick.css";
+
+@import "../../public/assets/fonts/gordita/stylesheet.css";
+@import "../../public/assets/fonts/bootstrap-icons-1.11.1/font/bootstrap-icons.css";
+@import "../../public/assets/fonts/font-awesome-6.4.2/css/all.css";
+@import "../../public/assets/scss/style.scss";
+
+:root {
+  /* Colors */
+  --notion-bg: #FFFFFF;
+  --notion-bg-secondary: #F7F7F5;
+  --notion-sidebar-bg: #F7F7F5;
+  --notion-text-primary: #1A1A1A;
+  --notion-text-secondary: #64748b;
+  --notion-border: #EDEDEB;
+  --notion-blue: #2383E2;
+  --notion-radius: 8px;
+  --notion-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  /* Global Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+
+  /* Layout Constants */
+  --header-height: 64px;
+  --sidebar-width: 260px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  /* Standard viewport height for better compatibility */
+  overflow-x: hidden;
+  /* Prevent horizontal scroll globally */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  color: var(--notion-text-primary);
+  background-color: var(--notion-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Global Responsive Classes --- */
+
+/* Fluid container for page content */
+.page-wrapper {
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  padding: clamp(1rem, 5vw, 2rem);
+  /* Standardized padding for dashboard content */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Master Responsive Grid for cards, forms, sections */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Table wrapper for horizontal scroll protection */
+.responsive-table-outer {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--notion-radius);
+  border: 1px solid var(--notion-border);
+}
+
+/* Utility to force screen fit */
+.fit-screen {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}

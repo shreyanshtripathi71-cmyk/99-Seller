@@ -1,0 +1,445 @@
+// @use '../../styles/index.scss' as *; // Note: We use global CSS variables defined in index.scss
+
+.adminPage {
+    width: 100%;
+    max-width: 100%;
+    padding: clamp(1rem, 5vw, 2.5rem);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-height: 100%;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    h1 {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        font-weight: 700;
+        margin: 0;
+        color: var(--notion-text-primary);
+    }
+
+    p {
+        color: var(--notion-text-secondary);
+        margin: 0.5rem 0 0;
+        font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+
+        div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        button {
+            width: 100% !important;
+            justify-content: center;
+        }
+    }
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.1rem;
+    color: var(--notion-text-secondary);
+}
+
+// Filters
+.filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    width: 100%;
+
+    @media (max-width: 576px) {
+        flex-direction: column;
+    }
+}
+
+.searchInput {
+    flex: 1;
+    min-width: min(300px, 100%);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--notion-border);
+    border-radius: var(--notion-radius);
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: var(--notion-blue);
+        box-shadow: 0 0 0 3px rgba(35, 131, 226, 0.1);
+    }
+}
+
+.filterSelect {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--notion-border);
+    border-radius: var(--notion-radius);
+    font-size: 0.875rem;
+    background: white;
+    cursor: pointer;
+    min-width: 160px;
+
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--notion-blue);
+    }
+}
+
+// Table
+.tableContainer {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--notion-shadow);
+    border: 1px solid var(--notion-border);
+    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    /* Force scroll on very narrow screens */
+
+    thead {
+        background: #f8f9fa;
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--notion-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--notion-border);
+            white-space: nowrap;
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 1px solid var(--notion-border);
+            transition: background 0.2s;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        td {
+            padding: 1rem;
+            color: var(--notion-text-primary);
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+    }
+}
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--notion-text-secondary);
+
+    i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+}
+
+// Badges
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.badgeSuccess {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.badgeWarning {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.badgeDanger {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.badgeDefault {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+// Actions
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btnAction {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+
+    &:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    i {
+        font-size: 0.875rem;
+    }
+}
+
+.btnView {
+    @extend .btnAction;
+    background: var(--notion-blue);
+    color: white;
+}
+
+.btnEdit {
+    @extend .btnAction;
+    background: #f59e0b;
+    color: white;
+}
+
+.btnDelete {
+    @extend .btnAction;
+    background: #ef4444;
+    color: white;
+}
+
+.btnBase {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: var(--notion-radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.btnPrimary {
+    @extend .btnBase;
+    background: var(--notion-blue);
+    color: white;
+
+    &:hover:not(:disabled) {
+        background: #1a73cd;
+        box-shadow: 0 4px 12px rgba(35, 131, 226, 0.2);
+    }
+}
+
+.btnSecondary {
+    @extend .btnBase;
+    background: white;
+    color: var(--notion-text-primary);
+    border: 1px solid var(--notion-border);
+
+    &:hover:not(:disabled) {
+        background: #f8f9fa;
+        border-color: #cbd5e1;
+    }
+}
+
+// Stats
+.stats {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    width: 100%;
+}
+
+.statCard {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--notion-shadow);
+    border: 1px solid var(--notion-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    h3 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--notion-text-secondary);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+.statValue {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--notion-text-primary);
+    margin: 0;
+}
+
+// Modal
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modalContent {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90dvh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        margin: 0 0 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--notion-text-primary);
+    }
+
+    @media (max-width: 480px) {
+        padding: 1.5rem;
+    }
+}
+
+// Forms
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-weight: 600;
+        color: var(--notion-text-primary);
+        font-size: 0.8125rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.75rem;
+        border: 1px solid var(--notion-border);
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        background: #fcfcfc;
+        transition: all 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: var(--notion-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(35, 131, 226, 0.1);
+        }
+
+        &:disabled {
+            background: #f1f5f9;
+            cursor: not-allowed;
+        }
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+}
+
+.formActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
+    }
+}
+
+// Media Queries for General Fixes
+@media (max-width: 768px) {
+    .dataTable {
+        min-width: 600px;
+    }
+}

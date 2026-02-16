@@ -1,0 +1,111 @@
+$sidebar-width: 260px;
+$sidebar-collapsed-width: 80px;
+$header-height: 64px;
+
+/* Breakpoints synchronized with global index.scss */
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+.layoutRoot {
+    display: flex;
+    min-height: 100vh;
+    /* Consistent viewport height */
+    background: var(--main-bg, #f8fafc);
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.sidebar {
+    background: var(--sidebar-bg, #ffffff);
+    border-right: 1px solid var(--sidebar-border, #e2e8f0);
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.mobileOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+}
+
+.mainWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: margin-left 0.3s ease;
+    width: 100%;
+}
+
+.topHeader {
+    height: $header-height;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--sidebar-border, #e2e8f0);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+    position: sticky;
+    top: 0;
+    z-index: 80;
+}
+
+.contentArea {
+    /* Utilizing the global .page-wrapper pattern through the parent */
+    padding: clamp(1rem, 4vw, 2rem);
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar_open {
+    width: $sidebar-width;
+}
+
+.sidebar_collapsed {
+    width: $sidebar-collapsed-width;
+}
+
+.sidebar_mobile_hidden {
+    width: $sidebar-width;
+    transform: translateX(-100%);
+}
+
+.sidebar_mobile_open {
+    width: $sidebar-width;
+    transform: translateX(0);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.main_with_sidebar {
+    margin-left: $sidebar-width;
+}
+
+.main_with_collapsed_sidebar {
+    margin-left: $sidebar-collapsed-width;
+}
+
+.main_mobile {
+    margin-left: 0;
+}
+
+/* Helper for internal grids */
+.adminGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}

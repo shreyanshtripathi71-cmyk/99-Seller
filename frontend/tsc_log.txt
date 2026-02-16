@@ -1,0 +1,117 @@
+src/app/forgot-password/page.tsx(26,38): error TS2339: Property 'message' does not exist on type '{ success: boolean; data?: any; error?: string | undefined; }'.
+src/app/pricing/page.tsx(87,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(96,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(113,25): error TS2322: Type '{ hidden: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/app/pricing/page.tsx(128,25): error TS2322: Type '{ hidden: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; x: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/app/pricing/page.tsx(151,29): error TS2322: Type '{ hidden: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(170,29): error TS2322: Type '{ hidden: { opacity: number; x: number; }; visible: { opacity: number; x: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(190,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/app/pricing/page.tsx(201,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(219,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/app/pricing/page.tsx(228,25): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/admin/AdminProfilePage.tsx(9,19): error TS2339: Property 'profile' does not exist on type 'AuthContextType'.
+src/components/dashboard/SavedSearchesPage.tsx(109,25): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/components/home/home-modern/Homepage.tsx(125,22): error TS2339: Property 'text' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'text' does not exist on type '{ title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; }'.
+src/components/home/home-modern/Homepage.tsx(132,84): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: string; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: string; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: string; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: string; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'string' is not assignable to type 'Easing | Easing[] | undefined'.
+src/components/home/home-modern/Homepage.tsx(135,27): error TS2339: Property 'title' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'title' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(136,30): error TS2339: Property 'subtitle' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'subtitle' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(137,33): error TS2339: Property 'description' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(138,30): error TS2339: Property 'features' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'features' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(140,30): error TS2339: Property 'imageAlt' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'imageAlt' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(141,29): error TS2339: Property 'ctaText' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'ctaText' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(147,84): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/home/home-modern/Homepage.tsx(150,27): error TS2339: Property 'title' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'title' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(151,30): error TS2339: Property 'subtitle' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'subtitle' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(152,33): error TS2339: Property 'description' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(153,30): error TS2339: Property 'features' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'features' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(155,30): error TS2339: Property 'imageAlt' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'imageAlt' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(156,29): error TS2339: Property 'ctaText' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'ctaText' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(166,78): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/home/home-modern/Homepage.tsx(169,27): error TS2339: Property 'title' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'title' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(173,27): error TS2339: Property 'deals' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'deals' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(177,82): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/home/home-modern/Homepage.tsx(209,84): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/home/home-modern/Homepage.tsx(212,27): error TS2339: Property 'title' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'title' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(213,30): error TS2339: Property 'subtitle' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'subtitle' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(214,33): error TS2339: Property 'description' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(215,30): error TS2339: Property 'features' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'features' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(217,30): error TS2339: Property 'imageAlt' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'imageAlt' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(218,29): error TS2339: Property 'ctaText' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'ctaText' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(230,84): error TS2339: Property 'text' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'text' does not exist on type '{ title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; }'.
+src/components/home/home-modern/Homepage.tsx(231,61): error TS2339: Property 'author' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'author' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(236,84): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: string; }; }; }' is not assignable to type 'Variants'.
+src/components/home/home-modern/Homepage.tsx(239,29): error TS2339: Property 'title' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'title' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(240,32): error TS2339: Property 'subtitle' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'subtitle' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(241,35): error TS2339: Property 'description' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'description' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(242,32): error TS2339: Property 'features' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'features' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(244,32): error TS2339: Property 'imageAlt' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'imageAlt' does not exist on type '{ text: string; }'.
+src/components/home/home-modern/Homepage.tsx(245,31): error TS2339: Property 'ctaText' does not exist on type '{ text: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { title: string; subtitle: string; description: string; features: string[]; ctaText: string; imageAlt: string; } | { ...; } | { ...; } | { ...; } | { ...; }'.
+  Property 'ctaText' does not exist on type '{ text: string; }'.

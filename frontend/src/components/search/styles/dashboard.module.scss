@@ -1,0 +1,3612 @@
+// =================================================================
+// 99SELLERS DASHBOARD - Professional SCSS Module
+// Clean, minimal, performance-focused
+// =================================================================
+
+@use './variables' as *;
+
+// --- BASE STYLES ---
+.dashboard_root {
+    display: flex;
+    min-height: 100vh;
+    /* Consistent viewport height */
+    background: $bg-secondary;
+    font-family: $font-family;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// =================================================================
+// SIDEBAR
+// =================================================================
+.sidebar {
+    width: $sidebar-width;
+    height: 100vh;
+    /* Consistent viewport height */
+    background: $bg-primary;
+    border-right: 1px solid $border-default;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: $z-sticky;
+    transition: transform $transition-slow;
+
+    @media (max-width: $breakpoint-lg) {
+        transform: translateX(-100%);
+        width: 280px;
+
+        &.show {
+            transform: translateX(0);
+            box-shadow: $shadow-xl;
+        }
+    }
+}
+
+.sidebar_brand {
+    height: $header-height;
+    padding: 0 $space-5;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $border-light;
+
+    .brand_logo {
+        font-size: $text-xl;
+        font-weight: $weight-bold;
+        color: $text-primary;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: $space-2;
+
+        span {
+            color: $primary;
+        }
+    }
+}
+
+.sidebar_nav {
+    flex: 1;
+    padding: $space-3 $space-3;
+    overflow-y: auto;
+}
+
+.nav_section {
+    margin-bottom: $space-5;
+}
+
+.nav_label {
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 $space-3;
+    margin-bottom: $space-2;
+}
+
+.nav_item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-2 $space-3;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-secondary;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    i {
+        width: 18px;
+        font-size: 14px;
+        opacity: 0.7;
+    }
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.active {
+        background: $primary-light;
+        color: $primary;
+
+        i {
+            opacity: 1;
+        }
+    }
+}
+
+.nav_badge {
+    margin-left: auto;
+    padding: 2px 6px;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+    background: $primary;
+    color: white;
+}
+
+.sidebar_footer {
+    padding: $space-4;
+    border-top: 1px solid $border-light;
+}
+
+.upgrade_card {
+    padding: $space-4;
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    border-radius: $radius-lg;
+    color: white;
+
+    h4 {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        margin: 0 0 $space-1;
+    }
+
+    p {
+        font-size: $text-xs;
+        opacity: 0.85;
+        margin: 0 0 $space-3;
+        line-height: 1.4;
+    }
+
+    button {
+        width: 100%;
+        padding: $space-2 $space-3;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: $radius-md;
+        font-size: $text-xs;
+        font-weight: $weight-semibold;
+        color: white;
+        cursor: pointer;
+        transition: background $transition-base;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+    }
+}
+
+.pro_badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $weight-bold;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+// =================================================================
+// MAIN CONTENT
+// =================================================================
+.main_content {
+    flex: 1;
+    margin-left: $sidebar-width;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    /* Ensure it never exceeds 100% */
+    transition: all $transition-base;
+
+    @media (max-width: $breakpoint-lg) {
+        margin-left: 0;
+    }
+}
+
+.top_header {
+    height: $header-height;
+    background: $bg-primary;
+    border-bottom: 1px solid $border-default;
+    padding: 0 clamp(1rem, 4vw, 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: $z-sticky;
+
+    @media (max-width: $breakpoint-lg) {
+        padding: 0 $space-4;
+    }
+}
+
+.menu_toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    color: $text-primary;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+        background: $bg-hover;
+    }
+
+    @media (max-width: 1024px) {
+        display: flex;
+    }
+}
+
+.sidebar_overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: $z-sticky - 1;
+
+    @media (max-width: 1024px) {
+        &.show {
+            display: block;
+        }
+    }
+}
+
+.header_left {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+}
+
+.page_title {
+    font-size: $text-lg;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    margin: 0;
+}
+
+.header_right {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+}
+
+.content_area {
+    flex: 1;
+    padding: clamp(0.75rem, 3vw, 1.25rem);
+    overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
+    /* Truly fluid */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /* Ensure children fill width */
+    gap: 0;
+    margin: 0;
+    /* Reset any inheritance */
+}
+
+// =================================================================
+// SEARCH BAR
+// =================================================================
+.search_container {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin-bottom: $space-3;
+
+    @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: $space-2;
+    }
+}
+
+.search_bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-3;
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    border-radius: $radius-lg;
+    transition: all $transition-base;
+
+    &:focus-within {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px $primary-light;
+    }
+
+    i {
+        color: $text-muted;
+        font-size: 14px;
+    }
+
+    input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: $text-base;
+        font-family: inherit;
+        color: $text-primary;
+        background: transparent;
+
+        &::placeholder {
+            color: $text-muted;
+        }
+    }
+}
+
+.search_actions {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+
+    @media (max-width: $breakpoint-md) {
+        justify-content: space-between;
+
+        button {
+            flex: 1;
+        }
+    }
+}
+
+// =================================================================
+// BUTTONS
+// =================================================================
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all $transition-base;
+    border: none;
+    text-decoration: none;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.btn_primary {
+    @extend .btn;
+    background: $primary;
+    color: white;
+
+    &:hover:not(:disabled) {
+        background: $primary-hover;
+    }
+}
+
+.btn_secondary {
+    @extend .btn;
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    color: $text-secondary;
+
+    &:hover:not(:disabled) {
+        background: $bg-hover;
+        border-color: $border-dark;
+        color: $text-primary;
+    }
+}
+
+.btn_ghost {
+    @extend .btn;
+    background: transparent;
+    color: $text-secondary;
+
+    &:hover:not(:disabled) {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+}
+
+.btn_icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-md;
+    background: transparent;
+    border: 1px solid $border-default;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+        border-color: $border-dark;
+    }
+
+    &.active {
+        background: $primary-light;
+        color: $primary;
+        border-color: $primary;
+    }
+}
+
+// =================================================================
+// BADGES
+// =================================================================
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-1;
+    padding: 3px 8px;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+}
+
+.badge_primary {
+    background: $primary-light;
+    color: $primary;
+}
+
+.badge_success {
+    background: $success-light;
+    color: $success;
+}
+
+.badge_warning {
+    background: $warning-light;
+    color: $warning;
+}
+
+.badge_danger {
+    background: $danger-light;
+    color: $danger;
+}
+
+.badge_neutral {
+    background: $bg-tertiary;
+    color: $text-secondary;
+}
+
+// =================================================================
+// DATA TABLE
+// =================================================================
+.table_container {
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    border-radius: $radius-xl;
+    overflow-x: auto;
+    /* Allow horizontal scroll for large tables */
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table_header {
+    background: $bg-secondary;
+
+    th {
+        padding: $space-2 $space-3;
+        font-size: $text-xs;
+        font-weight: $weight-semibold;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: left;
+        border-bottom: 1px solid $border-default;
+        white-space: nowrap;
+    }
+}
+
+.table_row {
+    transition: background $transition-base;
+
+    &:hover {
+        background: $bg-hover;
+    }
+
+    &:not(:last-child) {
+        border-bottom: 1px solid $border-light;
+    }
+
+    td {
+        padding: $space-2 $space-3;
+        font-size: $text-sm;
+        color: $text-primary;
+        vertical-align: middle;
+    }
+}
+
+.table_address {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+
+    .address_image {
+        width: 40px;
+        height: 30px;
+        border-radius: $radius-sm;
+        object-fit: cover;
+        background: $bg-tertiary;
+    }
+
+    .address_text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .address_line {
+            font-weight: $weight-medium;
+            color: $text-primary;
+        }
+
+        .address_city {
+            font-size: $text-xs;
+            color: $text-muted;
+        }
+    }
+}
+
+.table_equity {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .equity_value {
+        font-weight: $weight-semibold;
+        color: $success;
+    }
+
+    .equity_percent {
+        font-size: $text-xs;
+        color: $text-muted;
+    }
+}
+
+.table_actions {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.save_btn {
+    @extend .btn_icon;
+    border: none;
+    width: 32px;
+    height: 32px;
+
+    &.saved {
+        color: $danger;
+        background: $danger-light;
+    }
+}
+
+// =================================================================
+// GRID VIEW
+// =================================================================
+.grid_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $space-4;
+    width: 100%;
+}
+
+.grid_card {
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    border-radius: $radius-xl;
+    overflow: hidden;
+    transition: all $transition-slow;
+    width: 100%;
+
+    &:hover {
+        box-shadow: $shadow-lg;
+        transform: translateY(-2px);
+    }
+}
+
+.imageGallery {
+    position: relative;
+    width: 100%;
+    height: 400px; // Fixed height to prevent covering content
+    overflow: hidden;
+    background: #000;
+}
+
+.galleryOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: $space-4;
+    pointer-events: none;
+
+    >* {
+        pointer-events: auto;
+    }
+}
+
+.imageInfo {
+    display: flex;
+    gap: $space-2;
+}
+
+.thumbnailStrip {
+    display: flex;
+    gap: $space-2;
+    overflow-x: auto;
+    padding: $space-2;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: $radius-md;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+}
+
+.thumbnail {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $primary;
+    }
+
+    &.active {
+        border-color: $primary;
+        box-shadow: 0 0 0 2px rgba($primary, 0.3);
+    }
+}
+
+.card_image {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card_badge {
+        position: absolute;
+        top: $space-3;
+        left: $space-3;
+    }
+
+    .card_save {
+        position: absolute;
+        top: $space-3;
+        right: $space-3;
+        @extend .btn_icon;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        border: none;
+
+        &.saved {
+            color: $danger;
+            background: rgba(254, 226, 226, 0.95);
+        }
+    }
+}
+
+.card_content {
+    padding: $space-3;
+}
+
+.card_title {
+    font-size: $text-base;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    margin: 0 0 $space-1;
+}
+
+.card_location {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin: 0 0 $space-3;
+}
+
+.card_stats {
+    display: flex;
+    gap: $space-4;
+    padding-top: $space-3;
+    border-top: 1px solid $border-light;
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .stat_label {
+            font-size: $text-xs;
+            color: $text-muted;
+        }
+
+        .stat_value {
+            font-size: $text-sm;
+            font-weight: $weight-semibold;
+            color: $text-primary;
+        }
+    }
+}
+
+// =================================================================
+// FILTERS
+// =================================================================
+.filters_panel {
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    border-radius: $radius-xl;
+    margin-bottom: $space-3;
+    overflow: hidden;
+}
+
+.filters_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-3;
+    border-bottom: 1px solid $border-light;
+
+    h3 {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0;
+    }
+}
+
+.filters_body {
+    padding: $space-3;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $space-3;
+}
+
+.filter_group {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+}
+
+.filter_label {
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    color: $text-secondary;
+}
+
+.filter_select {
+    padding: $space-2 $space-3;
+    padding-right: $space-8;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-family: inherit;
+    color: $text-primary;
+    background: $bg-primary;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+
+    &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px $primary-light;
+    }
+}
+
+.filter_input {
+    padding: $space-2 $space-3;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-family: inherit;
+    color: $text-primary;
+    background: $bg-primary;
+
+    &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px $primary-light;
+    }
+
+    &::placeholder {
+        color: $text-muted;
+    }
+}
+
+.filters_footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding: $space-4;
+    border-top: 1px solid $border-light;
+    background: $bg-secondary;
+}
+
+// =================================================================
+// RESULTS HEADER
+// =================================================================
+.results_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-2;
+
+    @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $space-3;
+    }
+}
+
+.results_count {
+    font-size: $text-sm;
+    color: $text-secondary;
+
+    strong {
+        color: $text-primary;
+        font-weight: $weight-semibold;
+    }
+}
+
+.view_toggle {
+    display: flex;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    overflow: hidden;
+}
+
+.view_btn {
+    padding: $space-2 $space-3;
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:not(:last-child) {
+        border-right: 1px solid $border-default;
+    }
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.active {
+        background: $primary-light;
+        color: $primary;
+    }
+}
+
+// =================================================================
+// USER MENU
+// =================================================================
+.user_avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: transform $transition-base;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.user_dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: $bg-primary;
+    border: 1px solid $border-default;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-xl;
+    z-index: $z-dropdown;
+    overflow: hidden;
+}
+
+.user_info {
+    padding: $space-4;
+    border-bottom: 1px solid $border-light;
+
+    .user_name {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 2px;
+    }
+
+    .user_email {
+        font-size: $text-xs;
+        color: $text-muted;
+        margin: 0;
+    }
+}
+
+.user_menu_item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    width: 100%;
+    padding: $space-3 $space-4;
+    background: transparent;
+    border: none;
+    font-size: $text-sm;
+    font-family: inherit;
+    color: $text-secondary;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+    transition: all $transition-base;
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.danger {
+        color: $danger;
+
+        &:hover {
+            background: $danger-light;
+        }
+    }
+
+    i {
+        width: 16px;
+        opacity: 0.7;
+    }
+}
+
+.user_menu_divider {
+    height: 1px;
+    background: $border-light;
+    margin: $space-1 0;
+}
+
+// =================================================================
+// EMPTY STATE
+// =================================================================
+.empty_state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $space-16 $space-6;
+    text-align: center;
+
+    .empty_icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $bg-tertiary;
+        border-radius: $radius-full;
+        margin-bottom: $space-5;
+
+        i {
+            font-size: 28px;
+            color: $text-muted;
+        }
+    }
+
+    h3 {
+        font-size: $text-lg;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-2;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-muted;
+        margin: 0 0 $space-5;
+        max-width: 320px;
+    }
+}
+
+// =================================================================
+// MODAL
+// =================================================================
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: $z-modal-backdrop;
+}
+
+.modal_card {
+    background: $bg-primary;
+    width: 100%;
+    max-width: 420px;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-xl;
+    overflow: hidden;
+}
+
+.modal_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-5;
+    border-bottom: 1px solid $border-light;
+
+    h3 {
+        font-size: $text-lg;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0;
+    }
+}
+
+.modal_body {
+    padding: $space-5;
+}
+
+.modal_footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding: $space-4 $space-5;
+    border-top: 1px solid $border-light;
+    background: $bg-secondary;
+}
+
+// Modal Content (Specific for Export/Generic)
+.modal_content {
+    background: $bg-primary;
+    padding: $space-8;
+    border-radius: $radius-2xl;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: $shadow-xl;
+    text-align: center;
+    position: relative;
+    border: 1px solid $border-light;
+
+    h3 {
+        font-size: $text-xl;
+        font-weight: $weight-bold;
+        color: $text-primary;
+        margin: 0 0 $space-2;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-muted;
+        margin-bottom: $space-6;
+    }
+}
+
+.export_options {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+
+    button {
+        padding: $space-4;
+        background: $bg-secondary;
+        border: 1px solid $border-default;
+        border-radius: $radius-xl;
+        font-size: $text-base;
+        font-weight: $weight-bold;
+        color: $text-primary;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background: rgba($primary, 0.05);
+            border-color: $primary;
+            color: $primary;
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// =================================================================
+// RESPONSIVE
+// =================================================================
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+
+        &.open {
+            transform: translateX(0);
+        }
+    }
+
+    .main_content {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .content_area {
+        padding: $space-4;
+    }
+
+    .filters_body {
+        grid-template-columns: 1fr;
+    }
+
+    .grid_container {
+        grid-template-columns: 1fr;
+    }
+}
+
+// =================================================================
+// ANALYTICS PAGE STYLES
+// =================================================================
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 1200px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.statCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-5;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+}
+
+.statIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.statContent {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+}
+
+.statValue {
+    font-size: $text-2xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    line-height: 1;
+}
+
+.statLabel {
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+.statChange {
+    font-size: $text-sm;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.statPeriod {
+    color: $text-muted;
+}
+
+.textSuccess {
+    color: $success;
+}
+
+.textDanger {
+    color: $danger;
+}
+
+.row {
+    display: flex;
+    gap: $space-5;
+
+    @media (max-width: 1024px) {
+        flex-direction: column;
+    }
+}
+
+.col8 {
+    flex: 2;
+    min-width: 0;
+}
+
+.col4 {
+    flex: 1;
+    min-width: 0;
+}
+
+// Chart styles
+.chartContainer {
+    display: flex;
+    align-items: flex-end;
+    gap: $space-3;
+    height: 200px;
+    padding: $space-4 0;
+}
+
+.chartBar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-2;
+    height: 100%;
+}
+
+.barContainer {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.barFill {
+    width: 32px;
+    border-radius: $radius-sm $radius-sm 0 0;
+    position: relative;
+    min-height: 8px;
+    transition: height 0.3s ease;
+
+    &:hover {
+        opacity: 0.9;
+
+        .barTooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}
+
+.barTooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $text-primary;
+    color: white;
+    font-size: $text-xs;
+    padding: $space-1 $space-2;
+    border-radius: $radius-sm;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    margin-bottom: $space-2;
+}
+
+.barLabel {
+    font-size: $text-xs;
+    color: $text-muted;
+    font-weight: $weight-medium;
+}
+
+// States list
+.statesList {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+}
+
+.stateItem {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+}
+
+.stateInfo {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.stateRank {
+    font-size: $text-xs;
+    color: $text-muted;
+    width: 24px;
+}
+
+.stateName {
+    flex: 1;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-primary;
+}
+
+.stateCount {
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    color: $text-secondary;
+}
+
+.stateBar {
+    height: 6px;
+    background: $bg-secondary;
+    border-radius: $radius-full;
+    overflow: hidden;
+}
+
+.stateBarFill {
+    height: 100%;
+    background: linear-gradient(90deg, $primary 0%, darken($primary, 10%) 100%);
+    border-radius: $radius-full;
+}
+
+// Legend
+.legendDot {
+    width: 10px;
+    height: 10px;
+    border-radius: $radius-full;
+}
+
+.legendLabel {
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+// Tab Navigation
+.tabNav {
+    display: flex;
+    gap: $space-2;
+    margin-bottom: $space-5;
+    border-bottom: 1px solid $border-default;
+    padding-bottom: $space-3;
+}
+
+.tabBtn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    border-radius: $radius-md;
+    border: none;
+    background: transparent;
+    color: $text-secondary;
+    font-size: $text-base;
+    font-weight: $weight-medium;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    i {
+        font-size: 14px;
+    }
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.active {
+        background: $primary-light;
+        color: $primary;
+    }
+}
+
+// Data Table
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        background: $bg-secondary;
+
+        th {
+            padding: $space-3 $space-4;
+            text-align: left;
+            font-size: $text-xs;
+            font-weight: $weight-semibold;
+            color: $text-muted;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid $border-default;
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 1px solid $border-light;
+            transition: background $transition-base;
+
+            &:hover {
+                background: $bg-hover;
+            }
+        }
+
+        td {
+            padding: $space-3 $space-4;
+            font-size: $text-sm;
+            color: $text-primary;
+            vertical-align: middle;
+        }
+    }
+}
+
+// Card styles for analytics
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $border-light;
+}
+
+.cardTitle {
+    font-size: $text-base;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    margin: 0;
+}
+
+.cardActions {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+}
+
+.cardBody {
+    padding: $space-5;
+}
+
+// Table styles
+.searchQuery {
+    display: flex;
+    align-items: center;
+    font-weight: $weight-medium;
+    color: $text-primary;
+}
+
+// Header actions area
+.header_actions {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin-right: $space-4;
+}
+
+// =================================================================
+// PROFILE PAGE STYLES
+// =================================================================
+.profileGrid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: $space-5;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.profileSidebar {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-6;
+    text-align: center;
+    height: fit-content;
+}
+
+.avatarWrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto $space-4;
+}
+
+.avatarLarge {
+    width: 120px;
+    height: 120px;
+    border-radius: $radius-full;
+    background: linear-gradient(135deg, $primary 0%, darken($primary, 15%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: $weight-bold;
+    color: white;
+}
+
+.avatarUpload {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: $bg-primary;
+    border: 2px solid $bg-primary;
+    box-shadow: $shadow-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: $text-secondary;
+
+    &:hover {
+        background: $primary;
+        color: white;
+    }
+}
+
+.profileName {
+    font-size: $text-lg;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    margin-bottom: $space-1;
+}
+
+.profileEmail {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin-bottom: $space-4;
+}
+
+.profileStats {
+    display: flex;
+    justify-content: center;
+    gap: $space-6;
+    padding-top: $space-4;
+    border-top: 1px solid $border-light;
+}
+
+.profileStatItem {
+    text-align: center;
+}
+
+.profileStatValue {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    display: block;
+}
+
+.profileStatLabel {
+    font-size: $text-xs;
+    color: $text-muted;
+}
+
+.profileMain {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+}
+
+.formLabel {
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-primary;
+}
+
+.formInput {
+    padding: $space-3 $space-4;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    color: $text-primary;
+    background: $bg-primary;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+
+    &::placeholder {
+        color: $text-muted;
+    }
+}
+
+.formTextarea {
+    @extend .formInput;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding-top: $space-4;
+    border-top: 1px solid $border-light;
+    margin-top: $space-4;
+}
+
+// =================================================================
+// BILLING PAGE STYLES
+// =================================================================
+.trialBanner {
+    background: linear-gradient(135deg, $primary 0%, #8B5CF6 100%);
+    border-radius: $radius-lg;
+    padding: $space-5;
+    margin-bottom: $space-5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $space-4;
+}
+
+.trialBannerContent {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+}
+
+.trialBannerIcon {
+    font-size: 28px;
+    color: white;
+}
+
+.trialBannerText {
+    h4 {
+        color: white;
+        margin: 0 0 $space-1 0;
+        font-weight: $weight-semibold;
+        font-size: $text-lg;
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0;
+        font-size: $text-sm;
+    }
+}
+
+.billingOverviewGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: $space-5;
+}
+
+.billingStatCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-5;
+}
+
+.billingStatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $space-4;
+
+    h3 {
+        font-size: $text-base;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0;
+    }
+}
+
+.billingStatValue {
+    display: flex;
+    align-items: baseline;
+    gap: $space-2;
+    margin-bottom: $space-3;
+
+    .value {
+        font-size: 32px;
+        font-weight: $weight-bold;
+        color: $text-primary;
+    }
+
+    .period {
+        font-size: $text-sm;
+        color: $text-muted;
+    }
+}
+
+.billingStatRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $space-3 0;
+    border-top: 1px solid $border-light;
+
+    &:first-of-type {
+        border-top: none;
+        padding-top: 0;
+    }
+
+    .label {
+        font-size: $text-sm;
+        color: $text-muted;
+    }
+
+    .amount {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+    }
+
+    .warning {
+        color: $warning;
+    }
+}
+
+.billingActionsCard {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+}
+
+.paymentMethodCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-4 $space-5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+
+    &.isDefault {
+        background: rgba($primary, 0.05);
+        border-color: rgba($primary, 0.3);
+    }
+}
+
+.paymentMethodInfo {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+}
+
+.paymentMethodIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    background: rgba($primary, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+        font-size: 20px;
+        color: $primary;
+    }
+}
+
+.paymentMethodDetails {
+    .name {
+        font-weight: $weight-medium;
+        color: $text-primary;
+        margin-bottom: $space-1;
+    }
+
+    .meta {
+        font-size: $text-sm;
+        color: $text-muted;
+
+        .defaultBadge {
+            color: $primary;
+            margin-left: $space-2;
+        }
+    }
+}
+
+.paymentMethodActions {
+    display: flex;
+    gap: $space-2;
+}
+
+.billingAddressCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+}
+
+.billingAddressContent {
+    line-height: 1.8;
+
+    p {
+        margin: 0;
+
+        &.name {
+            font-weight: $weight-medium;
+            color: $text-primary;
+        }
+
+        &.address {
+            color: $text-muted;
+        }
+    }
+}
+
+.billingGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-5;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.planCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    overflow: hidden;
+}
+
+.planHeader {
+    padding: $space-5;
+    border-bottom: 1px solid $border-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.planInfo {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+}
+
+.planName {
+    font-size: $text-lg;
+    font-weight: $weight-bold;
+    color: $text-primary;
+}
+
+.planPrice {
+    font-size: $text-2xl;
+    font-weight: $weight-bold;
+    color: $primary;
+
+    span {
+        font-size: $text-sm;
+        font-weight: $weight-normal;
+        color: $text-muted;
+    }
+}
+
+.planBadge {
+    padding: $space-1 $space-3;
+    background: rgba($success, 0.1);
+    color: $success;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+}
+
+.planFeatures {
+    padding: $space-5;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+}
+
+.planFeature {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    font-size: $text-sm;
+    color: $text-secondary;
+
+    i {
+        color: $success;
+    }
+}
+
+.planActions {
+    padding: $space-4 $space-5;
+    border-top: 1px solid $border-light;
+    background: $bg-secondary;
+}
+
+.usageCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-5;
+}
+
+.usageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-4;
+}
+
+.usageTitle {
+    font-size: $text-base;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+}
+
+.usageItems {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+}
+
+.usageItem {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+}
+
+.usageLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: $text-sm;
+    color: $text-secondary;
+}
+
+.usageProgress {
+    height: 8px;
+    background: $bg-secondary;
+    border-radius: $radius-full;
+    overflow: hidden;
+}
+
+.usageProgressBar {
+    height: 100%;
+    border-radius: $radius-full;
+    transition: width 0.3s ease;
+}
+
+// =================================================================
+// SETTINGS PAGE STYLES
+// =================================================================
+.settingsSection {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    margin-bottom: $space-5;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.settingsSectionHeader {
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $border-light;
+}
+
+.settingsSectionTitle {
+    font-size: $text-base;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    margin: 0 0 $space-1 0;
+}
+
+.settingsSectionDesc {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin: 0;
+}
+
+.settingsSectionBody {
+    padding: $space-5;
+}
+
+.settingsItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $space-4 0;
+    border-bottom: 1px solid $border-light;
+
+    &:first-child {
+        padding-top: 0;
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+}
+
+.settingsItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+}
+
+.settingsItemLabel {
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-primary;
+}
+
+.settingsItemDesc {
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+// Toggle switch
+.toggle {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background: $border-default;
+    border-radius: $radius-full;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.active {
+        background: $primary;
+
+        .toggleKnob {
+            transform: translateX(22px);
+        }
+    }
+}
+
+.toggleKnob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: $radius-full;
+    box-shadow: $shadow-sm;
+    transition: transform 0.2s ease;
+}
+
+// =================================================================
+// EXPORT PAGE STYLES
+// =================================================================
+.btnGroup {
+    display: flex;
+    gap: $space-3;
+    margin-bottom: $space-4;
+}
+
+.exportGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.exportCard {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-5;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $primary;
+        box-shadow: $shadow-md;
+    }
+
+    &.selected {
+        border-color: $primary;
+        background: rgba($primary, 0.02);
+    }
+}
+
+.exportIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto $space-3;
+    font-size: 24px;
+}
+
+.exportName {
+    font-size: $text-base;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    margin-bottom: $space-1;
+}
+
+.exportDesc {
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+.historyTable {
+    margin-top: $space-5;
+}
+
+
+// =================================================================
+// PROPERTY DETAILS PAGE STYLES
+// =================================================================
+.propertyDetailsPage {
+    padding-bottom: $space-10;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: $text-primary; // Ensure text is visible
+
+    // Ensure all child elements are visible
+    * {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+.header_actions {
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.propertyHeader {
+    border-bottom: 1px solid $border-light;
+    padding-bottom: $space-4;
+    margin-bottom: $space-6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $space-4;
+}
+
+.priceCard {
+    text-align: center;
+    padding: $space-4;
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+}
+
+.priceLabel {
+    display: block;
+    font-size: $text-sm;
+    color: $text-muted;
+    margin-bottom: $space-2;
+}
+
+.priceValue {
+    display: block;
+    font-size: $text-3xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-3;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3;
+    background: $bg-primary;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    color: $text-secondary;
+
+    i {
+        color: $primary;
+        width: 18px;
+    }
+}
+
+.equityBar {
+    padding: $space-4;
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+}
+
+.equityHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-2;
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+.equityValue {
+    font-weight: $weight-bold;
+    color: $success;
+}
+
+.equityProgress {
+    height: 8px;
+    background: $bg-secondary;
+    border-radius: $radius-full;
+    overflow: hidden;
+    margin-bottom: $space-2;
+}
+
+.equityFill {
+    height: 100%;
+    background: linear-gradient(90deg, $success 0%, darken($success, 10%) 100%);
+    border-radius: $radius-full;
+    transition: width 0.3s ease;
+}
+
+.equityPercent {
+    font-size: $text-xs;
+    color: $text-muted;
+}
+
+.quickActions {
+    display: flex;
+    gap: $space-3;
+}
+
+// Tab Navigation
+.tabNav {
+    display: flex;
+    gap: $space-2;
+    padding: $space-2;
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+        height: 0;
+    }
+}
+
+.tabBtn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-4;
+    border: none;
+    background: transparent;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.active {
+        background: $primary;
+        color: white;
+    }
+}
+
+// Tab Content & Details Sections
+.tabContent {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    padding: $space-6;
+}
+
+.detailsSection {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+}
+
+.sectionIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.sectionTitle {
+    font-size: $text-lg;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    margin: 0 0 $space-1 0;
+}
+
+.sectionSubtitle {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin: 0;
+}
+
+// Details Grid
+.detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: $space-4;
+}
+
+.financialGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: $space-4;
+    padding: $space-4 0;
+}
+
+.finItem {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    label {
+        font-size: $text-xs;
+        font-weight: $weight-medium;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+}
+
+.detailLabel {
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detailValue {
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+}
+
+.legalSection {
+    margin-top: $space-4;
+    padding-top: $space-4;
+    border-top: 1px solid $border-light;
+
+    .legalValue {
+        font-size: $text-sm;
+        color: $text-secondary;
+        line-height: 1.6;
+        margin-top: $space-1;
+    }
+}
+
+.phoneWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.privacyNote {
+    font-size: 10px;
+    color: $warning;
+    font-style: italic;
+}
+
+// Details Cards
+.detailsCard {
+    padding: $space-4;
+    background: $bg-secondary;
+    border-radius: $radius-lg;
+
+    h4 {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-3 0;
+        display: flex;
+        align-items: center;
+
+        i {
+            color: $text-muted;
+        }
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-secondary;
+        margin: 0;
+        line-height: 1.6;
+    }
+}
+
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    p {
+        margin: 0;
+    }
+}
+
+.contactLink {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-3;
+    background: $bg-primary;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    color: $primary;
+    text-decoration: none;
+    border: 1px solid $border-light;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $primary;
+        background: rgba($primary, 0.05);
+    }
+
+    i {
+        width: 16px;
+    }
+}
+
+// Alert Box
+.alertBox {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+    padding: $space-4;
+    border-radius: $radius-lg;
+    border-left: 4px solid;
+
+    >i {
+        font-size: 20px;
+        margin-top: 2px;
+    }
+
+    strong {
+        display: block;
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin-bottom: $space-1;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-secondary;
+        margin: 0;
+    }
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: $space-1 $space-2;
+    border-radius: $radius-sm;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+}
+
+// Owner Card
+.ownerCard {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-5;
+    background: linear-gradient(135deg, rgba($primary, 0.05) 0%, rgba($primary, 0.02) 100%);
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+}
+
+.ownerAvatar {
+    width: 72px;
+    height: 72px;
+    border-radius: $radius-full;
+    background: linear-gradient(135deg, $primary 0%, darken($primary, 15%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: $weight-bold;
+    color: white;
+    flex-shrink: 0;
+}
+
+.ownerInfo {
+    flex: 1;
+}
+
+.ownerName {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    margin: 0 0 $space-2 0;
+}
+
+.ownerTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+}
+
+.ownerTag {
+    display: inline-flex;
+    align-items: center;
+    padding: $space-1 $space-2;
+    background: rgba($text-muted, 0.1);
+    border-radius: $radius-sm;
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    color: $text-muted;
+}
+
+// Skip Trace CTA
+.skipTraceCta {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-5;
+    background: linear-gradient(135deg, rgba($primary, 0.08) 0%, rgba($primary, 0.03) 100%);
+    border-radius: $radius-lg;
+    border: 1px dashed $primary;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.skipTraceIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-lg;
+    background: linear-gradient(135deg, $primary 0%, darken($primary, 15%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.skipTraceInfo {
+    flex: 1;
+
+    h4 {
+        font-size: $text-base;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-1 0;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-muted;
+        margin: 0;
+    }
+}
+
+// Loan Summary
+.loanSummary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.loanSummaryItem {
+    text-align: center;
+    padding: $space-4;
+    background: $bg-secondary;
+    border-radius: $radius-lg;
+}
+
+.loanSummaryLabel {
+    display: block;
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: $space-2;
+}
+
+.loanSummaryValue {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+}
+
+// Loan Card
+.loanCard {
+    padding: $space-5;
+    background: $bg-secondary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+}
+
+.loanHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-4;
+    padding-bottom: $space-4;
+    border-bottom: 1px solid $border-light;
+}
+
+.loanPosition {
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    color: $primary;
+    padding: $space-1 $space-2;
+    background: rgba($primary, 0.1);
+    border-radius: $radius-sm;
+}
+
+.loanAmount {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+}
+
+// Button variants
+.btnSuccess {
+    background: $success !important;
+    color: white !important;
+    border: none !important;
+
+    &:hover {
+        background: darken($success, 8%) !important;
+    }
+}
+
+// ==========================================
+// SUBSCRIPTION PAGE STYLES
+// ==========================================
+
+.subscriptionPage {
+    display: flex;
+    flex-direction: column;
+    gap: $space-6;
+}
+
+// Trial Banner
+.trialBanner {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-5;
+    background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
+    border: 1px solid rgba($primary, 0.2);
+    border-radius: $radius-lg;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.trialIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-full;
+    background: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.trialContent {
+    flex: 1;
+
+    h3 {
+        font-size: $text-lg;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-1 0;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-secondary;
+        margin: 0;
+
+        strong {
+            color: $primary;
+        }
+    }
+}
+
+.trialDays {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $space-3 $space-5;
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 2px solid $primary;
+}
+
+.daysNumber {
+    font-size: $text-3xl;
+    font-weight: $weight-bold;
+    color: $primary;
+    line-height: 1;
+}
+
+.daysLabel {
+    font-size: $text-xs;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+// Current Plan Card
+.currentPlanCard {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-5;
+    background: linear-gradient(135deg, rgba($success, 0.1) 0%, rgba($success, 0.05) 100%);
+    border: 1px solid rgba($success, 0.2);
+    border-radius: $radius-lg;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.planBadge {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-4;
+    background: $success;
+    color: white;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+
+    i {
+        font-size: 16px;
+    }
+}
+
+.planDetails {
+    flex: 1;
+
+    h3 {
+        font-size: $text-base;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-1 0;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-muted;
+        margin: 0;
+    }
+}
+
+.cancelBtn {
+    padding: $space-2 $space-4;
+    background: transparent;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $danger;
+        color: $danger;
+    }
+}
+
+// Billing Toggle
+.billingToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-4;
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+    }
+}
+
+.toggleLabel {
+    font-size: $text-sm;
+    color: $text-muted;
+}
+
+.toggleButtons {
+    display: flex;
+    background: $bg-secondary;
+    border-radius: $radius-lg;
+    padding: $space-1;
+    border: 1px solid $border-light;
+}
+
+.toggleBtn {
+    position: relative;
+    padding: $space-3 $space-5;
+    border: none;
+    background: transparent;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+
+    &:hover {
+        color: $text-primary;
+    }
+
+    &.active {
+        background: $bg-primary;
+        color: $primary;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+}
+
+.saveBadge {
+    padding: $space-1 $space-2;
+    background: rgba($success, 0.1);
+    color: $success;
+    border-radius: $radius-sm;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+}
+
+// Pricing Grid
+.pricingGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-5;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
+
+// Pricing Card
+.pricingCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: $space-6;
+    background: $bg-primary;
+    border: 1px solid $border-light;
+    border-radius: $radius-xl;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: $border-default;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    &.highlighted {
+        border-color: $primary;
+        box-shadow: 0 8px 32px rgba($primary, 0.15);
+        transform: scale(1.02);
+
+        @media (max-width: 1024px) {
+            transform: none;
+        }
+    }
+}
+
+.cardBadge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: $space-2 $space-4;
+    background: $primary;
+    color: white;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+    white-space: nowrap;
+}
+
+.cardHeader {
+    text-align: center;
+    margin-bottom: $space-5;
+    padding-top: $space-2;
+}
+
+.planName {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    margin: 0 0 $space-2 0;
+}
+
+.planDescription {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin: 0;
+}
+
+.priceSection {
+    text-align: center;
+    padding: $space-4 0;
+    border-top: 1px solid $border-light;
+    border-bottom: 1px solid $border-light;
+    margin-bottom: $space-5;
+}
+
+.price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+}
+
+.currency {
+    font-size: $text-xl;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+}
+
+.amount {
+    font-size: 48px;
+    font-weight: $weight-bold;
+    color: $text-primary;
+    line-height: 1;
+}
+
+.period {
+    font-size: $text-base;
+    color: $text-muted;
+}
+
+.billedAs {
+    font-size: $text-sm;
+    color: $text-muted;
+    margin-top: $space-2;
+}
+
+.savings {
+    display: inline-block;
+    margin-left: $space-2;
+    padding: $space-1 $space-2;
+    background: rgba($success, 0.1);
+    color: $success;
+    border-radius: $radius-sm;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+}
+
+.featureList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 $space-5 0;
+    flex: 1;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: $space-3;
+        padding: $space-2 0;
+        font-size: $text-sm;
+        color: $text-secondary;
+
+        i {
+            color: $success;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+    }
+}
+
+.selectPlanBtn {
+    width: 100%;
+    padding: $space-4;
+    border: 1px solid $border-default;
+    background: $bg-primary;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    color: $text-primary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: $bg-hover;
+        border-color: $primary;
+        color: $primary;
+    }
+
+    &.highlighted {
+        background: $primary;
+        border-color: $primary;
+        color: white;
+
+        &:hover:not(:disabled) {
+            background: darken($primary, 8%);
+        }
+    }
+
+    &.current {
+        background: rgba($success, 0.1);
+        border-color: $success;
+        color: $success;
+        cursor: default;
+    }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
+
+// FAQ Section
+.faqSection {
+    padding: $space-6;
+    background: $bg-secondary;
+    border-radius: $radius-xl;
+
+    h2 {
+        font-size: $text-xl;
+        font-weight: $weight-bold;
+        color: $text-primary;
+        text-align: center;
+        margin: 0 0 $space-6 0;
+    }
+}
+
+.faqGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-5;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.faqItem {
+    padding: $space-4;
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+
+    h4 {
+        font-size: $text-sm;
+        font-weight: $weight-semibold;
+        color: $text-primary;
+        margin: 0 0 $space-2 0;
+
+        i {
+            color: $primary;
+        }
+    }
+
+    p {
+        font-size: $text-sm;
+        color: $text-muted;
+        margin: 0;
+        line-height: 1.6;
+    }
+}
+
+// Enterprise CTA
+.enterpriseCta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-5;
+    padding: $space-6;
+    background: linear-gradient(135deg, $primary 0%, darken($primary, 15%) 100%);
+    border-radius: $radius-xl;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.ctaContent {
+    h3 {
+        font-size: $text-xl;
+        font-weight: $weight-bold;
+        color: white;
+        margin: 0 0 $space-2 0;
+    }
+
+    p {
+        font-size: $text-sm;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        max-width: 500px;
+    }
+}
+
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    padding: $space-3 $space-5;
+    background: white;
+    color: $primary;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    font-weight: $weight-semibold;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background: $bg-secondary;
+        transform: translateY(-2px);
+    }
+}
+
+// ==========================================
+// MASKED DATA STYLES
+// ==========================================
+
+.maskedData {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-1 $space-2;
+    background: $bg-secondary;
+    border-radius: $radius-sm;
+    font-family: monospace;
+    color: $text-muted;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.maskedOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba($bg-secondary, 0.8) 50%, transparent 100%);
+    border-radius: $radius-sm;
+}
+
+.unlockBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-1;
+    padding: $space-1 $space-2;
+    background: rgba($primary, 0.1);
+    color: $primary;
+    border-radius: $radius-sm;
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba($primary, 0.15);
+    }
+
+    i {
+        font-size: 10px;
+    }
+}
+
+// =================================================================
+// COMPREHENSIVE RESPONSIVE DESIGN - ALL SCREEN SIZES
+// =================================================================
+
+// Mobile First - Small Phones (320px - 480px)
+@media (max-width: 480px) {
+    .content_area {
+        padding: $space-3;
+    }
+
+    .search_container {
+        flex-direction: column;
+        gap: $space-2;
+    }
+
+    .search_bar {
+        width: 100%;
+        padding: $space-2 $space-3;
+
+        input {
+            font-size: $text-sm;
+        }
+    }
+
+    .search_actions {
+        width: 100%;
+
+        button {
+            flex: 1;
+            font-size: $text-xs;
+            padding: $space-2;
+        }
+    }
+
+    .page_title {
+        font-size: $text-base;
+    }
+
+    .results_header {
+        flex-direction: column;
+        gap: $space-2;
+        align-items: flex-start;
+    }
+
+    .results_count {
+        font-size: $text-sm;
+    }
+
+    // Table - Horizontal scroll on mobile
+    .table_container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        min-width: 600px; // Force horizontal scroll
+    }
+
+    .table_header th {
+        padding: $space-2 $space-3;
+        font-size: 10px;
+    }
+
+    .table_row td {
+        padding: $space-2 $space-3;
+        font-size: $text-xs;
+    }
+
+    .table_address {
+        .address_image {
+            width: 40px;
+            height: 30px;
+        }
+
+        .address_text {
+            .address_line {
+                font-size: $text-xs;
+            }
+        }
+    }
+
+    // Grid - Single column on mobile
+    .grid_container {
+        grid-template-columns: 1fr;
+        gap: $space-3;
+    }
+
+    // Filters - Stack vertically
+    .filters_body {
+        grid-template-columns: 1fr;
+        gap: $space-3;
+    }
+
+    // Property Details
+    .propertyHeader {
+        flex-direction: column;
+        gap: $space-3;
+        align-items: flex-start;
+    }
+
+    .header_actions {
+        width: 100%;
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
+    }
+
+    .imageGallery {
+        height: 250px;
+    }
+
+    .thumbnailStrip {
+        display: none; // Hide thumbnails on very small screens
+    }
+
+    .tabNav {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        button {
+            font-size: $text-xs;
+            padding: $space-2 $space-3;
+            white-space: nowrap;
+        }
+    }
+
+    .detailsGrid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .financialGrid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .propertyFeatures {
+        grid-template-columns: repeat(2, 1fr);
+        gap: $space-2;
+    }
+}
+
+// Tablet Portrait (481px - 768px)
+@media (min-width: 481px) and (max-width: 768px) {
+    .content_area {
+        padding: $space-4;
+    }
+
+    .search_container {
+        flex-wrap: wrap;
+    }
+
+    .search_actions {
+        button {
+            font-size: $text-sm;
+        }
+    }
+
+    .grid_container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filters_body {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .table_container {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 700px;
+    }
+
+    .imageGallery {
+        height: 300px;
+    }
+
+    .detailsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .financialGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .propertyFeatures {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+// Tablet Landscape & Small Desktop (769px - 1024px)
+@media (min-width: 769px) and (max-width: 1024px) {
+    .grid_container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filters_body {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .detailsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+// Large Desktop (1025px+)
+@media (min-width: 1025px) {
+    .grid_container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .filters_body {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+// Ultra-wide screens (1920px+)
+@media (min-width: 1920px) {
+    .content_area {
+        max-width: 100%;
+        /* Removed fixed 1800px limit for true fluidity */
+        margin: 0;
+    }
+
+    .grid_container {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        /* Better scaling on wide screens */
+    }
+}
+
+// Height-based media queries for short screens
+@media (max-height: 600px) {
+    .sidebar {
+        .upgrade_card {
+            display: none; // Hide upgrade card on short screens
+        }
+    }
+
+    .imageGallery {
+        height: 200px;
+    }
+}
+
+// Touch device optimizations
+@media (hover: none) and (pointer: coarse) {
+
+    .btn_icon,
+    .nav_item,
+    .table_row {
+        min-height: 44px; // iOS touch target minimum
+        min-width: 44px;
+    }
+
+    .btn {
+        min-height: 44px;
+    }
+
+    // Larger tap targets on mobile
+    .save_btn {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+// Print styles
+@media print {
+
+    .sidebar,
+    .top_header,
+    .search_container,
+    .filters_panel,
+    .header_actions {
+        display: none;
+    }
+
+    .main_content {
+        margin-left: 0;
+    }
+
+    .table_container {
+        border: none;
+        box-shadow: none;
+    }
+
+    .btnGroup {
+        flex-direction: column;
+        width: 100%;
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
