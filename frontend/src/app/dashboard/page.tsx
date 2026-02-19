@@ -2,13 +2,21 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardPage() {
     const router = useRouter();
+    const { isAdmin, isLoading } = useAuth();
 
     useEffect(() => {
-        router.replace("/dashboard/profile");
-    }, [router]);
+        if (!isLoading) {
+            if (isAdmin) {
+                router.replace("/admin");
+            } else {
+                router.replace("/dashboard/profile");
+            }
+        }
+    }, [router, isAdmin, isLoading]);
 
     return (
         <div style={{

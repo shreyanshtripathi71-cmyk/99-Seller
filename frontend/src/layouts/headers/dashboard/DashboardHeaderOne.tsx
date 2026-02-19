@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 const DashboardHeaderOne = ({ isActive, setIsActive }: any) => {
    const pathname = usePathname();
    const router = useRouter();
-   const { logout, user, subscription, isTrialActive, getTrialDaysRemaining } = useAuth();
+   const { logout, user, subscription, isTrialActive, getTrialDaysRemaining, isAdmin } = useAuth();
 
    const handleLogout = () => {
       logout();
@@ -24,6 +24,32 @@ const DashboardHeaderOne = ({ isActive, setIsActive }: any) => {
             </div>
             <nav className="dasboard-main-nav pt-30 pb-30 bottom-line">
                <ul className="style-none">
+                  {/* Admin Panel Link - Only visible for admins */}
+                  {isAdmin && (
+                     <li className="plr" style={{ marginBottom: 12 }}>
+                        <Link href="/admin" className="d-flex w-100 align-items-center" style={{
+                           padding: '12px 16px',
+                           background: 'linear-gradient(135deg, #dc2626, #7c3aed)',
+                           borderRadius: 10,
+                           color: '#fff',
+                           textDecoration: 'none',
+                           fontWeight: 600,
+                           fontSize: 14,
+                           gap: 10,
+                           boxShadow: '0 4px 14px rgba(220, 38, 38, 0.3)',
+                           transition: 'all 0.2s ease'
+                        }}>
+                           <div style={{
+                              width: 36, height: 36, borderRadius: 8,
+                              background: 'rgba(255,255,255,0.2)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center'
+                           }}>
+                              <i className="fa-solid fa-user-shield" style={{ fontSize: 16 }}></i>
+                           </div>
+                           <span>Admin Panel</span>
+                        </Link>
+                     </li>
+                  )}
                   <li className="plr"><Link href="/search" className={`d-flex w-100 align-items-center ${pathname === '/search' ? 'active' : ''}`}>
                      <div className="icon tran3s d-flex align-items-center justify-content-center rounded-circle" style={{ width: 40, height: 40, background: pathname === '/search' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
                         <i className={`fa-solid fa-gauge-high ${pathname === '/search' ? 'text-primary' : ''}`}></i>
