@@ -218,6 +218,14 @@ const TYPE_OPTIONS = [
   { value: "sidebar", label: "Sidebar", icon: "fa-sidebar", description: "Side panel" },
 ];
 
+const parsePages = (pages: any): string[] => {
+  if (Array.isArray(pages)) return pages;
+  if (typeof pages === 'string') {
+    try { const parsed = JSON.parse(pages); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
+  }
+  return [];
+};
+
 const PoppinsManager = () => {
   const [poppins, setPoppins] = useState<Poppin[]>(DEFAULT_POPPINS);
   const [editingPoppin, setEditingPoppin] = useState<Poppin | null>(null);
@@ -436,7 +444,7 @@ const PoppinsManager = () => {
                   </td>
                   <td style={{ padding: "16px" }}>
                     <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                      {poppin.pages.slice(0, 2).map((page, i) => (
+                      {parsePages(poppin.pages).slice(0, 2).map((page: string, i: number) => (
                         <span key={i} style={{
                           padding: "2px 6px",
                           background: "#e0e7ff",
@@ -447,8 +455,8 @@ const PoppinsManager = () => {
                           {page}
                         </span>
                       ))}
-                      {poppin.pages.length > 2 && (
-                        <span style={{ fontSize: 11, color: "#64748b" }}>+{poppin.pages.length - 2}</span>
+                      {parsePages(poppin.pages).length > 2 && (
+                        <span style={{ fontSize: 11, color: "#64748b" }}>+{parsePages(poppin.pages).length - 2}</span>
                       )}
                     </div>
                   </td>

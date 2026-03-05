@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toggleSavedLead } from "@/services/savedLeadsService";
 import FeatureGatePopup from "@/components/ui/FeatureGatePopup";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { getMotiveTypeConfig } from "@/config/motiveTypeConfig";
 import {
   TrusteeSection,
@@ -23,6 +24,18 @@ import {
   TaxLienSection,
   OutOfStateSection
 } from "@/components/property/PropertyMotiveSections";
+import ForeclosureDetailView from "@/components/property/ForeclosureDetailView";
+import PreforeclosureDetailView from "@/components/property/PreforeclosureDetailView";
+import PropertyOverviewSection from "@/components/property/PropertyOverviewSection";
+import OwnerDetailsSection from "@/components/property/OwnerDetailsSection";
+import LoanDetailsSection from "@/components/property/LoanDetailsSection";
+import AuctionDetailView from "@/components/property/AuctionDetailView";
+import ProbateDetailView from "@/components/property/ProbateDetailView";
+import ViolationDetailView from "@/components/property/ViolationDetailView";
+import EvictionDetailView from "@/components/property/EvictionDetailView";
+import DivorceDetailView from "@/components/property/DivorceDetailView";
+import OutOfStateDetailView from "@/components/property/OutOfStateDetailView";
+import TaxDetailView from "@/components/property/TaxDetailView";
 
 // Extended Lead interface with all details
 export interface PropertyDetails {
@@ -58,6 +71,19 @@ export interface PropertyDetails {
     taxAssessedValue: number;
     lastSalePrice: number;
     lastSaleDate: string | null;
+    local_image_path?: string;
+    comments?: string;
+    PLandBuilding?: string;
+    PBase?: string | number;
+    PAppraisedBuildingAmt?: number;
+    PAppraisedLandAmt?: number;
+    PTotLandArea?: string | number;
+    PTotBuildingArea?: string | number;
+    PLastSoldAmt?: string | number;
+    PLastSoldDate?: string;
+    PListingID?: string;
+    PDateFiled?: string;
+    PTotAppraisedAmt?: string | number;
   };
   owner: {
     name: string;
@@ -71,6 +97,7 @@ export interface PropertyDetails {
     yearsOwned: number;
     isAbsentee: boolean;
     isCorporate: boolean;
+    is_out_of_state?: boolean;
   };
   owners?: any[];
   loans?: any[];
@@ -93,9 +120,9 @@ export interface PropertyDetails {
     defaultAmount: number;
     trustee?: string;
     trusteePhone?: string;
-    caseNumber?: string;
     documentNumber?: string;
   };
+  propertyTrustDeed?: any;
   trustee?: any;
   proaddress?: any;
   auctions?: any[];
@@ -143,7 +170,7 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
       if (!propertyId) { setLoading(false); return; }
       try {
         setLoading(true);
-        const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/properties/${propertyId}`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/properties/${propertyId}`;
         const token = typeof window !== 'undefined' ? localStorage.getItem('99sellers_token') : null;
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const response = await axios.get(url, { headers });
@@ -203,10 +230,10 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
     if (!property) return;
     const timestamp = Date.now();
     const exportData = {
-      property: property.property,
-      owner: { ...property.owner, phone: canAccessPremium() ? property.owner.phone : "REDACTED" },
-      financials: property.financials,
-      loans: property.loans,
+      property: property.property || {},
+      owner: { ...(property.owner || {}), phone: canAccessPremium() ? property.owner?.phone : "REDACTED" },
+      financials: property.financials || {},
+      loans: property.loans || [],
       distressType: property.type,
       ...(property.foreclosure && { foreclosure: property.foreclosure }),
     };
@@ -218,22 +245,111 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } else {
+      const formatCurrencyLocal = (val: any) => val != null && !isNaN(val) ? `$${Number(val).toLocaleString()}` : "N/A";
+      const formatDateLocal = (val: any) => val ? new Date(val).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "N/A";
+      const formatBoolLocal = (val: any) => val === true || val === 1 ? "Yes" : (val === false || val === 0 ? "No" : "N/A");
+
       const rows: string[][] = [
-        ["Property Address", property.property.address],
-        ["City", property.property.city], ["State", property.property.state], ["ZIP", property.property.zip],
-        ["Beds", String(property.property.beds)], ["Baths", String(property.property.baths)],
-        ["Sqft", String(property.property.sqft)], ["Year Built", String(property.property.yearBuilt)],
-        ["Appraised Value", `$${property.property.appraisedValue.toLocaleString()}`],
+        ["==== PROPERTY OVERVIEW ====", ""],
+        ["Property Address", property.property?.address || "N/A"],
+        ["City", property.property?.city || "N/A"],
+        ["State", property.property?.state || "N/A"],
+        ["ZIP", property.property?.zip || "N/A"],
+        ["County", property.property?.county || "N/A"],
+        ["Parcel Number", property.property?.parcelNumber || "N/A"],
+        ["Property Type", property.property?.propertyType || "N/A"],
+        ["Zoning", property.property?.zoning || "N/A"],
+        ["Beds", String(property.property?.beds ?? "N/A")],
+        ["Baths", String(property.property?.baths ?? "N/A")],
+        ["Sqft", String(property.property?.sqft ?? "N/A")],
+        ["Lot Size Area", property.property?.PTotLandArea ? String(property.property.PTotLandArea) : "N/A"],
+        ["Year Built", String(property.property?.yearBuilt ?? "N/A")],
+
         ["", ""],
-        ["Owner Name", property.owner.name],
-        ["Owner Phone", canAccessPremium() ? (property.owner.phone || "N/A") : "REDACTED"],
-        ["Owner Email", property.owner.email || "N/A"],
-        ["Mailing Address", property.owner.mailingAddress],
+        ["==== FINANCIAL & VALUATION ====", ""],
+        ["Appraised Value", formatCurrencyLocal(property.property?.appraisedValue)],
+        ["Tax Assessed Value", formatCurrencyLocal(property.property?.taxAssessedValue)],
+        ["Base Value", formatCurrencyLocal(property.property?.PBase)],
+        ["Land Amount", formatCurrencyLocal(property.property?.PAppraisedLandAmt)],
+        ["Building Amount", formatCurrencyLocal(property.property?.PAppraisedBuildingAmt)],
+        ["Last Sale Date", formatDateLocal(property.property?.lastSaleDate || property.property?.PLastSoldDate)],
+        ["Last Sale Price", formatCurrencyLocal(property.property?.lastSalePrice || property.property?.PLastSoldAmt)],
+        ["Monthly Rent", formatCurrencyLocal(property.financials?.monthlyRent)],
+        ["Property Taxes", formatCurrencyLocal(property.financials?.propertyTaxes)],
+        ["Total Debt", formatCurrencyLocal(property.financials?.totalDebt)],
+        ["Estimated Equity", formatCurrencyLocal(property.financials?.estimatedEquity)],
+        ["Equity Percent", property.financials?.equityPercent != null ? `${property.financials.equityPercent}%` : "N/A"],
+
         ["", ""],
-        ["Distress Type", property.type],
-        ["Total Debt", `$${property.financials.totalDebt.toLocaleString()}`],
-        ["Equity", `$${property.financials.estimatedEquity.toLocaleString()}`],
+        ["==== OWNER INFORMATION ====", ""],
+        ["Owner Name", property.owner?.name || "N/A"],
+        ["Company Name", property.proaddress?.PcompanyName ? String(property.proaddress.PcompanyName) : "N/A"],
+        ["Owner Phone", canAccessPremium() ? (property.owner?.phone || "N/A") : "REDACTED"],
+        ["Owner Email", property.owner?.email || "N/A"],
+        ["Mailing Address", property.owner?.mailingAddress || "N/A"],
+        ["Mailing City", property.owner?.mailingCity || "N/A"],
+        ["Mailing State", property.owner?.mailingState || "N/A"],
+        ["Mailing ZIP", property.owner?.mailingZip || "N/A"],
+        ["Out of State Owner?", formatBoolLocal(property.owner?.isAbsentee || property.owner?.is_out_of_state)],
+        ["Corporate Owned?", formatBoolLocal(property.owner?.isCorporate)],
+        ["Ownership Type", property.owner?.ownershipType || "N/A"],
+        ["Years Owned", String(property.owner?.yearsOwned ?? "N/A")],
+
+        ["", ""],
+        ["==== DISTRESS / MOTIVATION ====", ""],
+        ["Primary Distress Type", property.type || property.motiveType?.name || "N/A"],
+        ["Motive Code", property.motiveTypeCode || property.motiveType?.code || "N/A"],
+        ["Published On", formatDateLocal(property.publishedOn)],
       ];
+
+      if (property.foreclosure) {
+        rows.push(["", ""]);
+        rows.push(["==== FORECLOSURE DETAILS ====", ""]);
+        rows.push(["Status", property.foreclosure.status || "N/A"]);
+        rows.push(["Auction Date", formatDateLocal(property.foreclosure.auctionDate)]);
+        rows.push(["Auction Time", property.foreclosure.auctionTime || "N/A"]);
+        rows.push(["Auction Location", property.foreclosure.auctionLocation || "N/A"]);
+        rows.push(["Default Amount", formatCurrencyLocal(property.foreclosure.defaultAmount)]);
+        rows.push(["Trustee", property.foreclosure.trustee || "N/A"]);
+        rows.push(["Trustee Phone", property.foreclosure.trusteePhone || "N/A"]);
+        rows.push(["Document Number", property.foreclosure.documentNumber || "N/A"]);
+      }
+
+      if (property.taxLiens && property.taxLiens.length > 0) {
+        rows.push(["", ""]);
+        rows.push(["==== TAX LIENS ====", ""]);
+        rows.push(["Total Tax Liens", String(property.taxLiens.length)]);
+        property.taxLiens.forEach((lien: any, index: number) => {
+          rows.push([`Tax Lien #${index + 1} Authority`, lien.tax_authority || "N/A"]);
+          rows.push([`Tax Lien #${index + 1} Amount Owed`, formatCurrencyLocal(lien.amount_owed || lien.amount)]);
+          rows.push([`Tax Lien #${index + 1} Delinquency Year`, String(lien.delinquency_tax_year || "N/A")]);
+          rows.push([`Tax Lien #${index + 1} Redemption Date`, formatDateLocal(lien.redemption_expiration_date)]);
+        });
+      }
+
+      if (property.violations && property.violations.length > 0) {
+        rows.push(["", ""]);
+        rows.push(["==== CODE VIOLATIONS ====", ""]);
+        rows.push(["Total Code Violations", String(property.violations.length)]);
+        property.violations.forEach((violation: any, index: number) => {
+          rows.push([`Violation #${index + 1} Type`, violation.violation_type || "N/A"]);
+          rows.push([`Violation #${index + 1} Fine Amount`, formatCurrencyLocal(violation.fine_amount)]);
+          rows.push([`Violation #${index + 1} Description`, violation.description || "N/A"]);
+          rows.push([`Violation #${index + 1} Status`, violation.compliance_status || "N/A"]);
+        });
+      }
+
+      if (property.evictions && property.evictions.length > 0) {
+        rows.push(["", ""]);
+        rows.push(["==== EVICTIONS ====", ""]);
+        rows.push(["Total Evictions", String(property.evictions.length)]);
+        property.evictions.forEach((eviction: any, index: number) => {
+          rows.push([`Eviction #${index + 1} File Date`, formatDateLocal(eviction.file_date)]);
+          rows.push([`Eviction #${index + 1} Amount Owed`, formatCurrencyLocal(eviction.amount_owed)]);
+          rows.push([`Eviction #${index + 1} Case Number`, eviction.case_number || "N/A"]);
+          rows.push([`Eviction #${index + 1} Plaintiff Name`, eviction.plaintiff_name || "N/A"]);
+        });
+      }
       let csvContent = "\uFEFF";
       csvContent += ["Field", "Value"].join(",") + "\n";
       rows.forEach(r => { csvContent += r.map(c => `"${c}"`).join(",") + "\n"; });
@@ -244,6 +360,7 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
+    toast.success(`Exported ${format.toUpperCase()} successfully! Check your downloads box.`, { position: "bottom-right", autoClose: 3000 });
     setShowExportModal(false);
   };
 
@@ -282,7 +399,7 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
           </div>
           <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }}>
             <div style={{ ...sx.fieldsGrid, padding: 20 }}>
-              {[1,2,3].map(i => (
+              {[1, 2, 3].map(i => (
                 <div key={i}><span style={sx.fieldLabel}>••••••••</span><span style={sx.fieldValue}>••••••••</span></div>
               ))}
             </div>
@@ -293,16 +410,27 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
 
     return (
       <>
-        {(motiveTypeCode === 'PRE' || motiveTypeCode === 'Pre-foreclosure') && (<><TrusteeSection trustee={property.trustee} proaddress={property.proaddress} /><LoanSection loans={property.loans} /></>)}
-        {(motiveTypeCode === 'FOR' || motiveTypeCode === 'Foreclosure') && (<><AuctionSection auctions={property.auctions} proaddress={property.proaddress} auctioneer={property.auctioneer} /><TrusteeSection trustee={property.trustee} proaddress={property.proaddress} /><LoanSection loans={property.loans} /></>)}
-        {(motiveTypeCode === 'AUC' || motiveTypeCode === 'Auction') && (<AuctionSection auctions={property.auctions} proaddress={property.proaddress} auctioneer={property.auctioneer} />)}
-        {(motiveTypeCode === 'PRO' || motiveTypeCode === 'Probate') && (<><ProbateSection probates={property.probates} /><TrusteeSection trustee={property.trustee} proaddress={property.proaddress} /></>)}
-        {(motiveTypeCode === 'COD' || motiveTypeCode === 'Code Violation') && (<ViolationSection violations={property.violations} />)}
-        {(motiveTypeCode === 'EVI' || motiveTypeCode === 'Eviction') && (<EvictionSection evictions={property.evictions} />)}
-        {(motiveTypeCode === 'DIV' || motiveTypeCode === 'Divorce') && (<DivorceSection divorces={property.divorces} owners={property.owners} />)}
-        {(motiveTypeCode === 'TAX' || motiveTypeCode === 'Unpaid Taxes' || motiveTypeCode === 'Tax Default') && (<TaxLienSection taxLiens={property.taxLiens} />)}
+        {(motiveTypeCode === 'PRE' || motiveTypeCode === 'Pre-foreclosure') && (
+          <PreforeclosureDetailView
+            data={property}
+            isMobile={isMobile}
+          />
+        )}
+        {(motiveTypeCode === 'FOR' || motiveTypeCode === 'Foreclosure') && (
+          <ForeclosureDetailView
+            data={property}
+            isMobile={isMobile}
+          />
+        )}
+        {(motiveTypeCode === 'AUC' || motiveTypeCode === 'Auction') && (<AuctionDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'PRO' || motiveTypeCode === 'Probate') && (<ProbateDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'COD' || motiveTypeCode === 'Code Violation') && (<ViolationDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'EVI' || motiveTypeCode === 'Eviction') && (<EvictionDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'DIV' || motiveTypeCode === 'Divorce') && (<DivorceDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'TAX' || motiveTypeCode === 'Unpaid Taxes' || motiveTypeCode === 'Tax Default') && (<TaxDetailView data={property} isMobile={isMobile} />)}
+        {(motiveTypeCode === 'OOS') && (<OutOfStateDetailView data={property} isMobile={isMobile} />)}
         {(motiveTypeCode === 'OUT' || motiveTypeCode === 'Out of State') && (<OutOfStateSection owners={property.owners} propertyState={property.property?.state} proaddress={property.proaddress} />)}
-        {!['PRE', 'FOR', 'AUC', 'PRO', 'COD', 'EVI', 'DIV', 'TAX', 'OUT', 'Pre-foreclosure', 'Foreclosure', 'Auction', 'Probate', 'Code Violation', 'Eviction', 'Divorce', 'Unpaid Taxes', 'Out of State', 'Tax Default'].includes(motiveTypeCode) && (
+        {!['PRE', 'FOR', 'AUC', 'PRO', 'COD', 'EVI', 'DIV', 'TAX', 'OOS', 'OUT', 'Pre-foreclosure', 'Foreclosure', 'Auction', 'Probate', 'Code Violation', 'Eviction', 'Divorce', 'Unpaid Taxes', 'Out of State', 'Tax Default'].includes(motiveTypeCode) && (
           <>
             <div style={sx.infoHeader}>
               <div style={{ ...sx.infoIconBox, background: `${getDistressColor(property.type)}15`, color: getDistressColor(property.type) }}>
@@ -472,180 +600,22 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
 
           {/* OVERVIEW */}
           {activeTab === "overview" && (
-            <div style={sx.card}>
-              <div style={sx.infoHeader}>
-                <div style={{ ...sx.infoIconBox, background: 'rgba(59,130,246,0.1)', color: '#3b82f6' }}>
-                  <i className="fa-solid fa-house"></i>
-                </div>
-                <div>
-                  <h3 style={sx.infoTitle}>Property Information</h3>
-                  <p style={sx.infoSubtitle}>Complete property details and specifications</p>
-                </div>
-              </div>
-              <div style={sx.fieldsGrid}>
-                {[
-                  { l: 'Full Address', v: `${property.property.address}, ${property.property.city}, ${property.property.state} ${property.property.zip}` },
-                  { l: 'County', v: property.property.county },
-                  { l: 'Parcel Number', v: property.property.parcelNumber },
-                  { l: 'Property Type', v: property.property.propertyType },
-                  { l: 'Zoning', v: property.property.zoning },
-                  { l: 'Lot Size', v: `${property.property.lotSize} acres` },
-                  { l: 'Last Sale Price', v: property.property.lastSalePrice > 0 ? formatCurrency(property.property.lastSalePrice) : 'Unknown' },
-                  { l: 'Last Sale Date', v: formatDate(property.property.lastSaleDate || '') },
-                ].map((f, i) => (
-                  <div key={i}><span style={sx.fieldLabel}>{f.l}</span><span style={sx.fieldValue}>{f.v}</span></div>
-                ))}
-              </div>
-              {property.property.legalDescription && (
-                <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f3f4f6' }}>
-                  <span style={sx.fieldLabel}>Legal Description</span>
-                  <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.7, marginTop: 4 }}>{property.property.legalDescription}</p>
-                </div>
-              )}
-            </div>
+            <PropertyOverviewSection data={property} isMobile={isMobile} />
           )}
 
           {/* OWNER */}
           {activeTab === "owner" && (
-            <div style={sx.card}>
-              <div style={sx.infoHeader}>
-                <div style={{ ...sx.infoIconBox, background: 'rgba(16,185,129,0.1)', color: '#10b981' }}>
-                  <i className="fa-solid fa-user"></i>
-                </div>
-                <div>
-                  <h3 style={sx.infoTitle}>Owner Information</h3>
-                  <p style={sx.infoSubtitle}>Ownership details and registered contact info</p>
-                </div>
-              </div>
-
-              {!canAccessPremium() ? (
-                <div style={{ position: 'relative' }}>
-                  <div style={sx.lockMessage}>
-                    <i className="fa-solid fa-lock" style={{ fontSize: 28, color: '#9ca3af', marginBottom: 8 }}></i>
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>Premium Data Locked</h3>
-                    <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 14px' }}>Upgrade to view complete owner details and contact info.</p>
-                    <button style={sx.btnPrimary} onClick={() => setShowPremiumModal(true)}>Upgrade to Unlock</button>
-                  </div>
-                  <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }}>
-                    <div style={sx.ownerCard}>
-                      <div style={sx.ownerAvatar}>JD</div>
-                      <div>
-                        <h3 style={sx.ownerName}>••••• •••••</h3>
-                        <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
-                          <span style={sx.tag}>••••••</span><span style={sx.tag}>••••••</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{ ...sx.fieldsGrid, marginTop: 18 }}>
-                      {[1,2,3].map(i => (
-                        <div key={i}><span style={sx.fieldLabel}>••••••</span><span style={sx.fieldValue}>••••••••</span></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div style={sx.ownerCard}>
-                    <div style={sx.ownerAvatar}>
-                      {(property.owner.name || "?").split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)}
-                    </div>
-                    <div>
-                      <h3 style={sx.ownerName}>{getMaskedOrReal(property.owner.name, "name")}</h3>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
-                        <span style={sx.tag}>{property.owner.ownershipType}</span>
-                        {property.owner.isAbsentee && <span style={sx.tag}>Absentee Owner</span>}
-                        {property.owner.isCorporate && <span style={sx.tag}>Corporate</span>}
-                        {property.owner.yearsOwned > 0 && <span style={sx.tag}>{property.owner.yearsOwned} yr{property.owner.yearsOwned > 1 ? 's' : ''} owned</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ ...sx.fieldsGrid, marginTop: 18 }}>
-                    <div>
-                      <span style={sx.fieldLabel}>Email Address</span>
-                      <span style={sx.fieldValue}>{getMaskedOrReal(property.owner.email, "email")}</span>
-                    </div>
-                    <div>
-                      <span style={sx.fieldLabel}>Phone Number</span>
-                      <span style={{ ...sx.fieldValue, fontWeight: 700 }}>
-                        {getMaskedOrReal(property.owner.phone, "phone")}
-                      </span>
-                      {!canAccessPremium() && <span style={{ fontSize: 10, color: '#f59e0b', fontStyle: 'italic', display: 'block', marginTop: 2 }}>(Upgrade to unlock)</span>}
-                    </div>
-                    <div style={{ gridColumn: 'span 2' }}>
-                      <span style={sx.fieldLabel}>Mailing Address</span>
-                      <span style={sx.fieldValue}>
-                        {getMaskedOrReal(property.owner.mailingAddress, "address")}
-                        {property.owner.mailingCity ? `, ${property.owner.mailingCity}` : ''}
-                        {property.owner.mailingState ? `, ${property.owner.mailingState}` : ''}
-                        {property.owner.mailingZip ? ` ${property.owner.mailingZip}` : ''}
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            <OwnerDetailsSection
+              data={property}
+              canAccessPremium={canAccessPremium()}
+              maskData={maskData}
+              isMobile={isMobile}
+            />
           )}
 
           {/* LOANS */}
           {activeTab === "loans" && (
-            <div style={sx.card}>
-              <div style={sx.infoHeader}>
-                <div style={{ ...sx.infoIconBox, background: 'rgba(245,158,11,0.1)', color: '#f59e0b' }}>
-                  <i className="fa-solid fa-file-invoice-dollar"></i>
-                </div>
-                <div>
-                  <h3 style={sx.infoTitle}>Financials &amp; Loans</h3>
-                  <p style={sx.infoSubtitle}>Detailed debt obligations and equity analysis</p>
-                </div>
-              </div>
-
-              <div style={isMobile ? { ...sx.loanSummaryRow, gridTemplateColumns: '1fr' } : sx.loanSummaryRow}>
-                <div style={sx.summaryBox}>
-                  <span style={sx.labelSmall}>Total Debt</span>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: '#111827' }}>{formatCurrency(property.financials.totalDebt)}</span>
-                </div>
-                <div style={sx.summaryBox}>
-                  <span style={sx.labelSmall}>Equity Position</span>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: '#10b981' }}>{formatCurrency(property.financials.estimatedEquity)}</span>
-                </div>
-                <div style={sx.summaryBox}>
-                  <span style={sx.labelSmall}>Equity %</span>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: '#111827' }}>{property.financials.equityPercent}%</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <h4 style={{ fontSize: 14, fontWeight: 600, color: '#111827', margin: 0 }}>Loan History</h4>
-                <span style={{ fontSize: 12, color: '#9ca3af', fontWeight: 500 }}>{property.loans ? property.loans.length : 0} Records</span>
-              </div>
-
-              {property.loans && property.loans.length > 0 ? (
-                property.loans.map((loan, idx) => (
-                  <div key={idx} style={sx.loanCard}>
-                    <div style={sx.loanCardHead}>
-                      <span style={sx.posBadge}>{loan.position} Position</span>
-                      <span style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>{formatCurrency(loan.loanAmount)}</span>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14 }}>
-                      {[
-                        { l: 'Lender', v: loan.lender || 'Unknown' },
-                        { l: 'Recorded Date', v: formatDate(loan.loanDate) },
-                        { l: 'Interest Rate', v: (loan.interestRate ?? 0) > 0 ? `${loan.interestRate}%` : 'Fixed/Unknown' },
-                        { l: 'Type', v: loan.loanType || 'Conventional' },
-                      ].map((f, i) => (
-                        <div key={i}><span style={sx.fieldLabel}>{f.l}</span><span style={sx.fieldValue}>{f.v}</span></div>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af' }}>
-                  <div style={{ fontSize: 36, marginBottom: 10, color: '#d1d5db' }}><i className="fa-solid fa-file-invoice-dollar"></i></div>
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: '#4b5563', margin: '0 0 4px' }}>No Loans Found</h3>
-                  <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>No active or historical loan records found for this property.</p>
-                </div>
-              )}
-            </div>
+            <LoanDetailsSection data={property} isMobile={isMobile} />
           )}
 
           {/* DISTRESS */}
@@ -686,7 +656,7 @@ const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({ propertyId })
           )}
         </div>
       </DashboardShell>
-    </ProtectedRoute>
+    </ProtectedRoute >
   );
 };
 

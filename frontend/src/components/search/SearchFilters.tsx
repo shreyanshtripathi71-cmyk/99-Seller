@@ -9,6 +9,8 @@ export interface Filters {
    zipCode: string;
    motive: string;
    minEquity: string;
+   maxEquity: string;
+   minDebt: string;
    maxDebt: string;
    minBeds: string;
    minBaths: string;

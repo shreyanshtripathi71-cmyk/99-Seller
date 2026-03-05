@@ -1,0 +1,33 @@
+{
+  "Loan": [
+    "id",
+    "property_id",
+    "deed_id",
+    "borrower_name",
+    "lender_name",
+    "lender_address",
+    "datetime",
+    "loan_amount",
+    "total_default_amount",
+    "foreclosure_stage",
+    "lis_pendens_date",
+    "arrears_amount",
+    "default_status"
+  ],
+  "PropertyTrustDeed": [
+    "id",
+    "deed_id",
+    "county",
+    "property_address",
+    "owner_name",
+    "borrower_name",
+    "lender_name",
+    "lender_address",
+    "trustee_name",
+    "trustee_address",
+    "property_id",
+    "datetime",
+    "loan_amount",
+    "local_document_path"
+  ]
+}

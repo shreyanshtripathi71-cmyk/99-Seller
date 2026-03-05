@@ -34,7 +34,7 @@ const CONTENT_PAGES = [
 
 // --- Drag & Drop Components ---
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
 
 interface DragDropUploaderProps {
     value: string;
@@ -273,16 +273,88 @@ const AdminContentPage: React.FC = () => {
             const result = await adminAPI.content.get(key);
 
             if (result.success && result.data?.value) {
-                setJsonContent(JSON.stringify(result.data.value, null, 4));
-                setParsedContent(result.data.value);
+                // Fix double-serialization: if value is a string, try to parse it as JSON
+                let contentValue = result.data.value;
+                if (typeof contentValue === 'string') {
+                    try {
+                        contentValue = JSON.parse(contentValue);
+                    } catch (e) {
+                        // If it fails, keep it as a string
+                    }
+                }
+
+                setJsonContent(JSON.stringify(contentValue, null, 4));
+                setParsedContent(contentValue);
                 if (key === 'hero_images') {
-                    setHeroImages(result.data.value.slice(0, MAX_HERO_IMAGES));
+                    const heroArr = Array.isArray(contentValue) ? contentValue : [];
+                    setHeroImages(heroArr.slice(0, MAX_HERO_IMAGES));
                 }
             } else {
-                const defaultObj = key === 'hero_images' ? [] : { title: "New Content", content: "" };
+                // Rich defaults for each page type
+                const defaults: Record<string, any> = {
+                    hero_images: [
+                        { id: 1, url: '/images/hero1.jpg', title: '99Sellers', subtitle: 'The Off-Market Deal Terminal', order: 1 }
+                    ],
+                    page_home: {
+                        hero: { title: '99Sellers', highlight: 'Deal Terminal', subtitle: 'Find foreclosures, divorce filings, and tax liens before they hit the MLS.', backgroundImage: '/images/hero-bg.jpg' },
+                        stats: { leads: '50,000+', states: '50', motives: '9+' },
+                        features: [
+                            { title: 'Lead Discovery', description: 'Search distressed properties across all 50 states', image: '/images/features/discovery.jpg' },
+                            { title: 'Skip Tracing', description: 'Get owner contact info including phone and email', image: '/images/features/skip-tracing.jpg' },
+                            { title: 'Market Analytics', description: 'Understand market trends and property values', image: '/images/features/analytics.jpg' }
+                        ],
+                        testimonials: [
+                            { name: 'John D.', role: 'Real Estate Investor', text: 'Found 3 deals in my first month!', avatar: '/images/avatars/avatar1.jpg' }
+                        ],
+                        cta: { title: 'Start Finding Off-Market Deals Today', buttonText: 'Get Started Free', backgroundImage: '/images/cta-bg.jpg' }
+                    },
+                    page_about: {
+                        hero: { title: 'About', highlight: 'Us', subtitle: 'Empowering Real Estate Professionals to Find Motivated Sellers' },
+                        sections: [
+                            { id: 'challenge', title: 'The Challenge Every Agent Faces', content: 'Finding motivated sellers is the hardest part of real estate investing.' }
+                        ],
+                        distressedItems: ['Pre-Foreclosure', 'Probate', 'Divorce', 'Tax Delinquencies', 'Code Violations'],
+                        cta: { text: 'Ready to Transform Your Lead Generation?', buttonText: 'Get Started Free' }
+                    },
+                    page_faq: {
+                        title: 'Frequently Asked Questions', subtitle: 'Everything you need to know',
+                        faqs: [
+                            { question: 'What is 99Sellers?', answer: 'A real estate lead generation platform for off-market properties.' },
+                            { question: 'How does the free trial work?', answer: 'Sign up for a free 15-day trial. No credit card required.' }
+                        ]
+                    },
+                    page_pricing: {
+                        pricingHeader: { title: 'Our', titleHighlight: 'Pricing', subtitle: 'Choose the plan that fits your business.' },
+                        plans: [
+                            { id: 'starter', name: 'Free', price: '0', period: 'forever', description: 'Get started', features: [], buttonText: 'Get Started Free', popular: false },
+                            { id: 'monthly', name: 'Pro Monthly', price: '50', period: 'month', description: 'Full access', features: [], buttonText: 'Start Pro', popular: true }
+                        ],
+                        guarantee: { title: '30-day money-back guarantee', description: 'Try any paid plan risk-free.' }
+                    },
+                    page_features: {
+                        hero: { title: 'Powerful Features for Modern Investors', subtitle: 'Everything you need to find, track, and close off-market deals.' },
+                        features: [
+                            { image: '/images/features/discovery.jpg', title: 'Advanced Lead Discovery', layout: 'left', description: 'Search properties across all 50 states.' },
+                            { image: '/images/features/skip-tracing.jpg', title: 'Skip Tracing', layout: 'right', description: 'Get owner contact information.' }
+                        ]
+                    },
+                    page_contact: {
+                        hero: { title: 'Contact', highlight: 'Us', subtitle: 'Get in touch with our team' },
+                        contactInfo: { email: 'support@99sellers.com', phone: '(555) 123-4567' },
+                        sections: [
+                            { id: 'support', title: 'Customer Support', content: 'Our team is here to help.' }
+                        ]
+                    },
+                    page_privacy: { title: 'Privacy Policy', lastUpdated: 'January 1, 2025', content: 'Your privacy is important to us.' },
+                    page_terms: { title: 'Terms of Service', lastUpdated: 'January 1, 2025', content: 'By using 99Sellers, you agree to these terms.' },
+                    page_help: { title: 'Help Center', subtitle: 'How can we help you?', categories: [{ title: 'Getting Started', icon: 'rocket', articles: [] }] },
+                    page_affiliates: { hero: { title: 'Affiliate Program', subtitle: 'Earn commission by referring users' }, benefits: [{ title: 'High Commission', description: '30% recurring' }] },
+                    page_blog: { title: 'Blog', subtitle: 'Real estate insights and tips', featuredImage: '/images/blog/featured.jpg' }
+                };
+                const defaultObj = defaults[key] || { title: "New Content", content: "" };
                 setJsonContent(JSON.stringify(defaultObj, null, 4));
                 setParsedContent(defaultObj);
-                if (key === 'hero_images') setHeroImages([]);
+                if (key === 'hero_images') setHeroImages(Array.isArray(defaultObj) ? defaultObj : []);
             }
             setIsDirty(false);
         } catch (error) {
@@ -423,18 +495,30 @@ const AdminContentPage: React.FC = () => {
     };
 
     const renderField = (label: string, value: any, path: string[]) => {
-        // --- IMAGE FIELD DETECTION ---
-        const isImage = label.toLowerCase().includes('image') ||
-            label.toLowerCase().includes('photo') ||
-            label.toLowerCase().includes('logo') ||
-            label.toLowerCase().includes('icon') ||
-            label.toLowerCase().includes('banner') ||
-            label.toLowerCase() === 'url';
+        // --- UNIVERSAL IMAGE FIELD DETECTION ---
+        // Detect by field name
+        const lbl = label.toLowerCase();
+        const imageLabels = ['image', 'photo', 'logo', 'icon', 'banner', 'src', 'bg',
+            'background', 'thumbnail', 'cover', 'hero', 'avatar', 'picture', 'poster',
+            'img', 'screenshot', 'preview', 'wallpaper', 'graphic', 'illustration'];
+        const isImageByLabel = imageLabels.some(k => lbl.includes(k)) || lbl === 'url';
+
+        // Detect by value — if it looks like an image path/URL
+        const isImageByValue = typeof value === 'string' && (
+            /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico|avif)(\?.*)?$/i.test(value) ||
+            value.startsWith('/images/') ||
+            value.startsWith('/uploads/') ||
+            (value.startsWith('http') && /\.(jpg|jpeg|png|gif|webp|svg)/i.test(value)) ||
+            value.startsWith('data:image/')
+        );
+
+        const isImage = isImageByLabel || isImageByValue;
 
         if (isImage && typeof value === 'string') {
             return (
                 <div key={path.join('.')} style={{ marginBottom: 24 }}>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6, textTransform: 'capitalize' }}>
+                        <i className="fa-solid fa-image" style={{ marginRight: 6, color: '#6366f1', fontSize: 12 }}></i>
                         {label.replace(/_/g, ' ')}
                     </label>
                     <DragDropUploader

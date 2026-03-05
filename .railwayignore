@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js build
+.next/
+frontend/.next/
+frontend/out/
+
+# Build artifacts
+frontend/build/
+backend/build/
+backend/dist/
+dist/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env*.local
+**/.env*.local
+**/.env.local
+
+# OS files
+.DS_Store
+
+# Misc
+.vercel
+**/backups/
+**/uploads/
+.cache
+.git
+
+# Nested project
+99sellers/

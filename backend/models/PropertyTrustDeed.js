@@ -56,6 +56,10 @@ module.exports = (sequelize) => {
     loan_amount: {
       type: DataTypes.STRING(20),
       allowNull: true
+    },
+    local_document_path: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     tableName: 'property_trust_deed',

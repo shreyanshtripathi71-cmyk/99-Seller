@@ -78,7 +78,7 @@ const AdminPropertiesPage = () => {
 
   const fetchMotiveTypes = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/motive-types`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}/api/admin/motive-types`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('99sellers_token')}`
         }
@@ -211,7 +211,7 @@ const AdminPropertiesPage = () => {
 
   const getPropertyImage = (property: Property) => {
     if (property.local_image_path) {
-      return `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/uploads/${property.local_image_path}`;
+      return `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}/uploads/${property.local_image_path}`;
     }
     // Robust SVG fallback
     return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY0NzQ4YiI+PHBhdGggZD0iTTEyIDNMMiAxMmgzdjhoNnYtNmgydjZoNnYtOGgzTDEyIDN6Ii8+PC9zdmc+';

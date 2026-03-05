@@ -1,4 +1,4 @@
-const { Property, Proaddress, Owner, Loan, MotiveTypes, Auction, Auctioneer, SavedProperty, Eviction, Violation, Trustee, Probate, Divorce, TaxLien, PremiumUser, sequelize } = require('../models');
+const { Property, Proaddress, Owner, Loan, MotiveTypes, Auction, Auctioneer, Site, SavedProperty, Eviction, Violation, Trustee, Probate, Divorce, TaxLien, PremiumUser, PropertyTrustDeed, sequelize } = require('../models');
 const { Op } = require('sequelize');
 
 /**
@@ -37,6 +37,8 @@ exports.searchProperties = async (req, res) => {
             zip,
             motive,
             minEquity,
+            maxEquity,
+            minDebt,
             maxDebt,
             minBeds,
             minBaths,
@@ -45,10 +47,7 @@ exports.searchProperties = async (req, res) => {
             q // General search query
         } = req.query;
 
-        // Base where clause for Property
         const whereClause = {};
-
-        // General search query (Street, City, Zip)
         if (q) {
             whereClause[Op.or] = [
                 { PStreetAddr1: { [Op.like]: `%${q}%` } },
@@ -57,26 +56,31 @@ exports.searchProperties = async (req, res) => {
             ];
         }
 
-        // Filters
         if (state && state !== 'All') whereClause.Pstate = state;
         if (city) whereClause.Pcity = { [Op.like]: `%${city}%` };
-        if (zip) whereClause.Pzip = { [Op.like]: `%${zip}%` };
+        if (zip) {
+            const zips = zip.split(',').map(z => z.trim()).filter(Boolean);
+            if (zips.length === 1) {
+                whereClause.Pzip = { [Op.like]: `%${zips[0]}%` };
+            } else if (zips.length > 1) {
+                whereClause.Pzip = { [Op.in]: zips };
+            }
+        }
         if (minBeds && minBeds !== 'Any') whereClause.PBeds = { [Op.gte]: parseInt(minBeds) };
         if (minBaths && minBaths !== 'Any') whereClause.PBaths = { [Op.gte]: parseFloat(minBaths) };
         if (minSqft) whereClause.PTotSQFootage = { [Op.gte]: parseInt(minSqft) };
         if (minYear) whereClause.PYearBuilt = { [Op.gte]: parseInt(minYear) };
 
-        // Motive Filter (requires join)
-        const motiveInclude = {
-            model: MotiveTypes,
-            as: 'motiveType',
-            attributes: ['id', 'name']
-        };
+        const motiveInclude = { model: MotiveTypes, as: 'motiveType', attributes: ['id', 'name'] };
         if (motive && motive !== 'All') {
-            motiveInclude.where = { name: motive };
+            const motives = motive.split(',').map(m => m.trim()).filter(Boolean);
+            if (motives.length === 1) {
+                motiveInclude.where = { name: motives[0] };
+            } else if (motives.length > 1) {
+                motiveInclude.where = { name: { [Op.in]: motives } };
+            }
         }
 
-        // Fetch saved property IDs for the current user if authenticated
         let savedPropertyIds = new Set();
         if (req.user && req.user.Username) {
             const savedProps = await SavedProperty.findAll({
@@ -90,52 +94,22 @@ exports.searchProperties = async (req, res) => {
             where: whereClause,
             include: [
                 motiveInclude,
-                {
-                    model: Proaddress,
-                    as: 'proaddress',
-                    attributes: ['PStreetNum', 'PStreetName', 'Pcity', 'PState', 'Pzip', 'beds', 'baths', 'price', 'proptype', 'square_feet', 'owner_name', 'owner_phone']
-                },
-                {
-                    model: Owner,
-                    as: 'owners',
-                    attributes: ['OFirstName', 'OLastName']
-                },
-                {
-                    model: Loan,
-                    as: 'loans',
-                    attributes: ['loan_amount']
-                },
-                {
-                    model: Auction,
-                    as: 'auctions',
-                    attributes: ['AAuctionDateTime'],
-                    limit: 1,
-                    order: [['AAuctionDateTime', 'DESC']]
-                }
+                { model: Proaddress, as: 'proaddress', attributes: ['PStreetNum', 'PStreetName', 'Pcity', 'PState', 'Pzip', 'beds', 'baths', 'price', 'proptype', 'square_feet', 'owner_name', 'owner_phone'] },
+                { model: Owner, as: 'owners', attributes: ['OFirstName', 'OLastName'] },
+                { model: Loan, as: 'loans', attributes: ['loan_amount'] },
+                { model: Auction, as: 'auctions', attributes: ['AAuctionDateTime'], limit: 1, order: [['AAuctionDateTime', 'DESC']] }
             ],
             order: [['id', 'DESC']],
             limit: 100
         });
 
-        // Calculate equity and format results
         let isPremium = req.user && (req.user.UserType === 'premium' || req.user.UserType === 'admin');
-
-        // Robust Premium Check (Case Insensitive)
         if (!isPremium && req.user) {
             try {
                 const username = req.user.Username;
-                const premiums = await PremiumUser.findAll({
-                    where: {
-                        Username: { [Op.or]: [username, username.toLowerCase(), username.toUpperCase()] }
-                    }
-                });
-
-                if (premiums && premiums.length > 0) {
-                    isPremium = true;
-                }
-            } catch (err) {
-                console.error(`Error checking premium status:`, err);
-            }
+                const premiums = await PremiumUser.findAll({ where: { Username: { [Op.or]: [username, username.toLowerCase(), username.toUpperCase()] } } });
+                if (premiums && premiums.length > 0) isPremium = true;
+            } catch (err) { console.error(err); }
         }
 
         const results = properties.map(property => {
@@ -146,9 +120,7 @@ exports.searchProperties = async (req, res) => {
 
             return {
                 id: property.id,
-                image: property.local_image_path
-                    ? `${req.protocol}://${req.get('host')}/uploads/${property.local_image_path}`
-                    : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400", // Fallback
+                image: property.local_image_path ? `${req.protocol}://${req.get('host')}/uploads/${property.local_image_path}` : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400",
                 type: property.motiveType?.name || 'Unknown',
                 address: isPremium ? (property.PStreetAddr1 || (property.proaddress ? `${property.proaddress.PStreetNum} ${property.proaddress.PStreetName}` : 'Address Unknown')) : maskValue(property.PStreetAddr1 || (property.proaddress ? `${property.proaddress.PStreetNum} ${property.proaddress.PStreetName}` : 'Address Unknown'), 'address'),
                 city: property.Pcity || property.proaddress?.Pcity || '',
@@ -164,27 +136,20 @@ exports.searchProperties = async (req, res) => {
                 year: property.PYearBuilt || 'N/A',
                 auctionDate: property.auctions?.[0]?.AAuctionDateTime ? new Date(property.auctions[0].AAuctionDateTime).toLocaleDateString() : 'Pending',
                 publishedOn: property.PDateFiled ? new Date(property.PDateFiled).toLocaleDateString() : 'Unknown',
-                saved: savedPropertyIds.has(property.id), // Checked against Set of saved IDs
+                saved: savedPropertyIds.has(property.id),
                 ownerName: isPremium ? (property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : 'Unknown') : maskValue(property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : 'John Smith'),
                 ownerPhone: isPremium ? (property.owners?.[0]?.OCellPhone || '---') : maskValue(property.owners?.[0]?.OCellPhone || '(555) 123-4567', 'phone'),
                 ownerEmail: isPremium ? (property.owners?.[0]?.OEmailAddr || '---') : maskValue(property.owners?.[0]?.OEmailAddr || 'owner@example.com', 'email')
             };
         });
 
-        // Apply post-fetch filters (Equity/Debt)
         let filteredResults = results;
-        if (minEquity) {
-            filteredResults = filteredResults.filter(r => r.equityPercent >= parseInt(minEquity));
-        }
-        if (maxDebt) {
-            filteredResults = filteredResults.filter(r => r.debt <= parseInt(maxDebt));
-        }
+        if (minEquity) filteredResults = filteredResults.filter(r => r.equityPercent >= parseInt(minEquity));
+        if (maxEquity && parseInt(maxEquity) < 100) filteredResults = filteredResults.filter(r => r.equityPercent <= parseInt(maxEquity));
+        if (minDebt) filteredResults = filteredResults.filter(r => r.debt >= parseInt(minDebt));
+        if (maxDebt) filteredResults = filteredResults.filter(r => r.debt <= parseInt(maxDebt));
 
-        res.json({
-            success: true,
-            count: filteredResults.length,
-            data: filteredResults
-        });
+        res.json({ success: true, count: filteredResults.length, data: filteredResults });
     } catch (err) {
         console.error('SearchProperties Error:', err);
         res.status(500).json({ success: false, error: 'Server Error', details: err.message });
@@ -196,18 +161,21 @@ exports.searchProperties = async (req, res) => {
  * @route GET /api/properties/:id
  */
 exports.getProperty = async (req, res) => {
-    console.log(`[GET_PROPERTY] Fetching ID: ${req.params.id}`);
     try {
         const { id } = req.params;
-
-        console.log(`[GET_PROPERTY] Querying DB for ID: ${id}`);
         const property = await Property.findByPk(id, {
             include: [
                 { model: MotiveTypes, as: 'motiveType', attributes: ['id', 'name', 'code'] },
-                { model: Proaddress, as: 'proaddress' },
+                {
+                    model: Proaddress, as: 'proaddress', include: [
+                        { model: PropertyTrustDeed, as: 'propertyTrustDeed' },
+                        { model: Site, as: 'site' }
+                    ]
+                },
                 { model: Owner, as: 'owners' },
                 { model: Loan, as: 'loans' },
                 { model: Auction, as: 'auctions', limit: 1, order: [['AAuctionDateTime', 'DESC']] },
+                { model: Auctioneer, as: 'auctioneer' },
                 { model: Eviction, as: 'evictions' },
                 { model: Violation, as: 'violations' },
                 { model: Probate, as: 'probates' },
@@ -216,234 +184,158 @@ exports.getProperty = async (req, res) => {
             ]
         });
 
-        if (!property) {
-            console.log(`[GET_PROPERTY] Property ${id} not found`);
-            return res.status(404).json({ success: false, message: 'Property not found' });
-        }
-        console.log(`[GET_PROPERTY] Found property ${id}. Calculating financials...`);
-        // Calculate financials
+        if (!property) return res.status(404).json({ success: false, message: 'Property not found' });
+
         const appraised = parseFloat(property.PTotAppraisedAmt || property.proaddress?.price || 0);
         const totalDebt = (property.loans || []).reduce((sum, loan) => sum + parseFloat(loan.loan_amount || 0), 0);
         const equity = appraised - totalDebt;
         const equityPercent = appraised > 0 ? Math.round((equity / appraised) * 100) : 0;
 
-        console.log(`[GET_PROPERTY] Financials calculated. Constructing data object...`);
         let isPremium = req.user && (req.user.UserType === 'premium' || req.user.UserType === 'admin');
-
-        // DOUBLE CHECK: If user is 'free' in UserLogin, check PremiumUser table just in case
-        // DOUBLE CHECK: If user is 'free' in UserLogin, check PremiumUser table just in case
-        // DOUBLE CHECK: If user is 'free' in UserLogin, check PremiumUser table just in case
-        // DIRECT OVERRIDE: If the user exists in PremiumUser table, they are PREMIUM.
-        // DOUBLE CHECK: If user is 'free' in UserLogin, check PremiumUser table just in case
-        // DIRECT OVERRIDE: If the user exists in PremiumUser table, they are PREMIUM.
         if (!isPremium && req.user) {
             try {
-                // Check if ANY record exists in PremiumUser for this user (Case Insensitive attempt)
                 const username = req.user.Username;
-                const premiums = await PremiumUser.findAll({
-                    where: {
-                        Username: { [Op.or]: [username, username.toLowerCase(), username.toUpperCase()] }
-                    }
-                });
-
-                if (premiums && premiums.length > 0) {
-                    console.log(`[PREMIUM_OVERRIDE] Found PremiumUser record for ${username}. Unmasking data.`);
-                    isPremium = true;
-                } else {
-                    console.log(`[PREMIUM_OVERRIDE] No PremiumUser record found for ${username} (checked variants).`);
-                }
-            } catch (err) {
-                console.error(`Error checking premium status:`, err);
-            }
+                const premiums = await PremiumUser.findAll({ where: { Username: { [Op.or]: [username, username.toLowerCase(), username.toUpperCase()] } } });
+                if (premiums && premiums.length > 0) isPremium = true;
+            } catch (err) { console.error(err); }
         }
 
-        // Check for local image
-        const mainImage = property.local_image_path
-            ? `${req.protocol}://${req.get('host')}/uploads/${property.local_image_path}`
-            : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800";
+        const mainImage = property.local_image_path ? `${req.protocol}://${req.get('host')}/uploads/${property.local_image_path}` : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800";
 
-        // Construct detailed response
         const data = {
             id: property.id,
+            type: property.motiveType?.name || 'Unknown',
+            motiveTypeCode: property.motiveType?.code || 'UNK',
             property: {
+                ...property.dataValues,
                 image: mainImage,
-                images: [
-                    mainImage,
-                    // Keep one fallback for gallery variety if needed, or just duplicate
-                    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"
-                ],
-                address: isPremium ? (property.PStreetAddr1 || (property.proaddress ? property.proaddress.PStreetNum + ' ' + property.proaddress.PStreetName : 'Address Unknown')) : maskValue(property.PStreetAddr1 || (property.proaddress ? property.proaddress.PStreetNum + ' ' + property.proaddress.PStreetName : 'Address Unknown'), 'address'),
+                images: [mainImage, "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"],
+                address: isPremium ? (property.PStreetAddr1 || (property.proaddress ? `${property.proaddress.PStreetNum} ${property.proaddress.PStreetName}` : 'Address Unknown')) : maskValue(property.PStreetAddr1 || (property.proaddress ? `${property.proaddress.PStreetNum} ${property.proaddress.PStreetName}` : 'Address Unknown'), 'address'),
                 city: property.Pcity || property.proaddress?.Pcity,
                 state: property.Pstate || property.proaddress?.PState,
                 zip: property.Pzip || property.proaddress?.Pzip,
-                county: property.proaddress?.county || 'Unknown',
-                parcelNumber: property.PParcelID || 'Unknown',
-                legalDescription: property.PLegalDesc || 'Unknown',
+                county: property.Pcounty || property.proaddress?.counties || 'Unknown',
+                parcelNumber: property.PListingID || property.proaddress?.listing_id || 'Unknown',
+                legalDescription: property.PComments || property.proaddress?.violation_desc || 'Unknown',
                 beds: parseInt(property.PBeds || property.proaddress?.beds || 0),
                 baths: parseFloat(property.PBaths || property.proaddress?.baths || 0),
                 sqft: parseInt(property.PTotSQFootage || property.proaddress?.square_feet || 0),
-                lotSize: parseFloat(property.PAcreage || 0),
-                yearBuilt: parseInt(property.PYearBuilt || 0),
-                propertyType: property.proaddress?.proptype || 'Single Family',
-                zoning: property.PZoning || 'Residential',
+                lotSize: parseFloat(property.PAcreage || property.proaddress?.lot_size || 0),
+                yearBuilt: property.PYearBuilt || property.proaddress?.PYearBuilt || 'Unknown',
+                propertyType: property.PType || property.proaddress?.proptype || 'Single Family',
                 appraisedValue: appraised,
-                taxAssessedValue: parseFloat(property.PTotAssessedValue || 0),
-                lastSalePrice: parseFloat(property.PLastSalePrice || 0),
-                lastSaleDate: property.PLastSaleDate || null
+                taxAssessedValue: property.PTotAppraisedAmt ? parseFloat(property.PTotAppraisedAmt) : (property.proaddress?.price ? parseFloat(property.proaddress.price) * 0.8 : 0),
+                landArea: property.PTotLandArea || property.proaddress?.lot_size || 'N/A',
+                buildingArea: property.PTotBuildingArea || (property.proaddress?.square_feet ? `${property.proaddress.square_feet} sqft` : 'N/A'),
+                caseNumber: property.proaddress?.case_number || 'N/A',
+                deedBook: property.proaddress?.deed_book_page || 'N/A'
             },
             owner: {
-                name: isPremium ? (property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : 'Unknown') : maskValue(property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : 'John Smith'),
-                mailingAddress: isPremium ? (property.owners?.[0]?.OMailAddr1 || property.PStreetAddr1) : maskValue(property.owners?.[0]?.OMailAddr1 || property.PStreetAddr1, 'address'),
-                mailingCity: property.owners?.[0]?.OMailCity || property.Pcity,
-                mailingState: property.owners?.[0]?.OMailState || property.Pstate,
-                mailingZip: property.owners?.[0]?.OMailZip || property.Pzip,
-                phone: isPremium ? property.owners?.[0]?.OCellPhone : maskValue(property.owners?.[0]?.OCellPhone || '(555) 123-4567', 'phone'),
-                email: isPremium ? property.owners?.[0]?.OEmailAddr : maskValue(property.owners?.[0]?.OEmailAddr || 'owner@example.com', 'email'),
-                ownershipType: property.owners?.[0]?.OType || 'Individual',
-                yearsOwned: 0,
-                isAbsentee: property.PStreetAddr1 !== property.owners?.[0]?.OMailAddr1,
-                isCorporate: (property.owners?.[0]?.OType || '').includes('CORP') || (property.owners?.[0]?.OType || '').includes('LLC')
+                name: isPremium ? (property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : (property.proaddress?.owner_name || 'Unknown')) : maskValue(property.owners?.[0] ? `${property.owners[0].OFirstName} ${property.owners[0].OLastName}` : (property.proaddress?.owner_name || 'John Smith'), 'name'),
+                // Prioritize Mailing Address as per user request
+                mailingAddress: isPremium ? (property.proaddress?.owner_mailing_address || property.owners?.[0]?.OStreetAddr1 || property.PStreetAddr1) : maskValue(property.proaddress?.owner_mailing_address || property.owners?.[0]?.OStreetAddr1 || property.PStreetAddr1, 'address'),
+                mailingCity: property.proaddress?.owner_mailing_city || property.owners?.[0]?.OCity || property.proaddress?.Pcity || property.Pcity,
+                mailingState: property.proaddress?.owner_mailing_state || property.owners?.[0]?.OState || property.proaddress?.PState || property.Pstate,
+                mailingZip: property.proaddress?.owner_mailing_zip || property.owners?.[0]?.OZip || property.proaddress?.Pzip || property.Pzip,
+                phone: isPremium ? (property.proaddress?.owner_phone || property.owners?.[0]?.OCellPhone) : maskValue(property.proaddress?.owner_phone || property.owners?.[0]?.OCellPhone || '(555) 123-4567', 'phone'),
+                email: isPremium ? (property.proaddress?.owner_email || property.owners?.[0]?.OEmailAddr) : maskValue(property.proaddress?.owner_email || property.owners?.[0]?.OEmailAddr || 'owner@example.com', 'email'),
+                ownershipType: property.proaddress?.trusteetype || 'Individual',
+                isAbsentee: true,
+                isCorporate: !!(property.proaddress?.PcompayName)
             },
             financials: {
                 totalDebt,
                 estimatedEquity: equity,
                 equityPercent,
                 propertyTaxes: parseFloat(property.PTaxAmt || 0),
-                taxDelinquent: false
             },
             loans: (property.loans || []).map((l, i) => ({
+                ...l.toJSON(),
                 loanNumber: i + 1,
                 lender: l.lender_name || 'Unknown',
                 loanAmount: parseFloat(l.loan_amount || 0),
-                loanDate: l.loan_date,
-                loanType: l.loan_type || 'Conventional',
-                interestRate: parseFloat(l.interest_rate || 0),
-                maturityDate: l.loan_due_date,
                 position: i === 0 ? "1st" : "2nd"
             })),
-            type: property.motiveType?.name || 'Unknown',
-            motiveTypeCode: property.motiveType?.code || 'UNK',
+            propertyTrustDeed: property.proaddress?.propertyTrustDeed ? {
+                ...property.proaddress.propertyTrustDeed.toJSON(),
+                documentUrl: property.proaddress.propertyTrustDeed.local_document_path
+                    ? `${req.protocol}://${req.get('host')}/uploads/${property.proaddress.propertyTrustDeed.local_document_path}`
+                    : `${req.protocol}://${req.get('host')}/uploads/deeds/deed_${property.id}.pdf`
+            } : {
+                documentUrl: `${req.protocol}://${req.get('host')}/uploads/deeds/deed_${property.id}.pdf`
+            },
             publishedOn: property.PDateFiled || property.createdAt,
-            // Pass raw objects for full data access
             proaddress: property.proaddress,
-            // Pass raw arrays for frontend motive sections
             auctions: property.auctions,
             probates: property.probates,
             divorces: property.divorces,
             evictions: property.evictions,
             violations: property.violations,
             taxLiens: property.taxLiens,
-            loans: property.loans,
-            trustee: property.trustee,
-            auctioneer: property.auctioneer
+            trustee: {
+                ...(property.proaddress?.propertyTrustDeed ? property.proaddress.propertyTrustDeed.toJSON() : {}),
+                TTrusteeName: property.proaddress?.trusteename,
+                TTrusteePhone: property.proaddress?.trusteephone,
+                TTrusteeEmail: property.proaddress?.trusteeemail,
+                TTrusteeWebSite: property.proaddress?.trusteewebsite,
+                trusteetype: property.proaddress?.trusteetype
+            },
+            auctioneer: property.auctioneer ? {
+                // Full Auctioneer model record (has html, web_site, type, etc.)
+                ...property.auctioneer.toJSON(),
+                // Alias for the frontend (web_site → website for easier access)
+                website: property.auctioneer.web_site,
+                company: property.proaddress?.auctioneercompanyname
+            } : {
+                // Fallback from proaddress fields if no Auctioneer FK record
+                name: property.proaddress?.auctioneername,
+                phone: property.proaddress?.auctioneerphone,
+                email: property.proaddress?.auctioneeremail,
+                company: property.proaddress?.auctioneercompanyname,
+                address: property.proaddress?.auctioneeraddress,
+                website: property.proaddress?.auctioneerweb_site,
+                html: property.proaddress?.auctioneerhtml
+            },
+            site: property.proaddress?.site
         };
 
-        console.log(`[GET_PROPERTY] Data object constructed. Checking saved status...`);
-
-        // Check if this property is saved by the user (if authenticated)
         let isSaved = false;
         if (req.user && req.user.Username) {
-            const savedRecord = await SavedProperty.findOne({
-                where: {
-                    Username: req.user.Username,
-                    propertyId: id
-                }
-            });
+            const savedRecord = await SavedProperty.findOne({ where: { Username: req.user.Username, propertyId: id } });
             isSaved = !!savedRecord;
         }
-
         data.saved = isSaved;
-        console.log(`[GET_PROPERTY] Saved status: ${isSaved}. Sending response...`);
 
-        // Add motive type-specific data based on motive type
         const motiveCode = property.motiveType?.code;
-
-        // Foreclosure & Preforeclosure - add auction data
-        if ((motiveCode === 'FOR' || motiveCode === 'PRE' || motiveCode === 'AUC') && property.auctions?.[0]) {
+        // Refined Foreclosure Logic: "Pending" if no auction, "Foreclosure" if auction exists
+        if (motiveCode === 'FOR' || motiveCode === 'PRE' || motiveCode === 'AUC') {
+            const hasAuction = property.auctions && property.auctions.length > 0;
             data.foreclosure = {
-                auctionDate: property.auctions[0].AAuctionDateTime,
-                auctionTime: new Date(property.auctions[0].AAuctionDateTime).toLocaleTimeString(),
-                auctionLocation: property.auctions[0].AAuctionPlace,
-                status: 'Scheduled',
-                defaultAmount: parseFloat(property.auctions[0].ABid || 0)
+                status: hasAuction ? 'Foreclosure' : 'Pending',
+                auctionDate: hasAuction ? property.auctions[0].AAuctionDateTime : null,
+                auctionTime: hasAuction ? new Date(property.auctions[0].AAuctionDateTime).toLocaleTimeString() : null,
+                auctionLocation: hasAuction ? property.auctions[0].AAuctionPlace : null,
+                defaultAmount: hasAuction ? parseFloat(property.auctions[0].ABid || 0) : parseFloat(property.proaddress?.auction_amt || 0)
             };
         }
-
-        // Probate - add probate case data
         if (motiveCode === 'PRO' && property.probates?.[0]) {
-            data.probate = {
-                caseNumber: property.probates[0].case_number,
-                court: property.probates[0].probate_court,
-                filingDate: property.probates[0].filing_date,
-                estateType: property.probates[0].estate_type,
-                executor: property.probates[0].executor_name,
-                executorContact: property.probates[0].executor_contact,
-                estateValue: parseFloat(property.probates[0].estate_value || 0),
-                status: property.probates[0].status
-            };
+            data.probate = { caseNumber: property.probates[0].case_number, court: property.probates[0].probate_court, filingDate: property.probates[0].filing_date, estateType: property.probates[0].estate_type, executor: property.probates[0].executor_name, executorContact: property.probates[0].executor_contact, estateValue: parseFloat(property.probates[0].estate_value || 0), status: property.probates[0].status };
         }
-
-        // Divorce - add divorce case data
         if (motiveCode === 'DIV' && property.divorces?.[0]) {
-            data.divorce = {
-                caseNumber: property.divorces[0].case_number,
-                court: property.divorces[0].court_name,
-                filingDate: property.divorces[0].filing_date,
-                type: property.divorces[0].divorce_type,
-                petitioner: property.divorces[0].petitioner_name,
-                respondent: property.divorces[0].respondent_name,
-                status: property.divorces[0].status,
-                settlementDate: property.divorces[0].settlement_date
-            };
+            data.divorce = { caseNumber: property.divorces[0].case_number, court: property.divorces[0].court_name, filingDate: property.divorces[0].filing_date, type: property.divorces[0].divorce_type, petitioner: property.divorces[0].petitioner_name, respondent: property.divorces[0].respondent_name, status: property.divorces[0].status, settlementDate: property.divorces[0].settlement_date };
         }
-
-        // Unpaid Taxes - add tax lien data
         if (motiveCode === 'TAX' && property.taxLiens?.[0]) {
-            data.taxLien = {
-                taxYear: property.taxLiens[0].tax_year,
-                amountOwed: parseFloat(property.taxLiens[0].amount_owed || 0),
-                lienDate: property.taxLiens[0].lien_date,
-                authority: property.taxLiens[0].tax_authority,
-                lienNumber: property.taxLiens[0].lien_number,
-                status: property.taxLiens[0].status,
-                saleDate: property.taxLiens[0].sale_date,
-                redemptionEnd: property.taxLiens[0].redemption_period_end
-            };
+            data.taxLien = { taxYear: property.taxLiens[0].tax_year, amountOwed: parseFloat(property.taxLiens[0].amount_owed || 0), lienDate: property.taxLiens[0].lien_date, authority: property.taxLiens[0].tax_authority, lienNumber: property.taxLiens[0].lien_number, status: property.taxLiens[0].status, saleDate: property.taxLiens[0].sale_date, redemptionEnd: property.taxLiens[0].redemption_period_end };
         }
-
-        // Eviction - add eviction data
         if (motiveCode === 'EVI' && property.evictions?.[0]) {
-            data.eviction = {
-                courtDate: property.evictions[0].court_date,
-                docket: property.evictions[0].court_docket,
-                description: property.evictions[0].court_desc,
-                courtRoom: property.evictions[0].court_room,
-                details: property.evictions[0].details
-            };
+            data.eviction = { courtDate: property.evictions[0].court_date, docket: property.evictions[0].court_docket, description: property.evictions[0].court_desc, courtRoom: property.evictions[0].court_room, details: property.evictions[0].details };
         }
-
-        // Code Violations - add violation data
         if (motiveCode === 'COD' && property.violations?.[0]) {
-            data.codeViolation = {
-                complaint: property.violations[0].complaint,
-                issueDate: property.violations[0].issue_date,
-                type: property.violations[0].types,
-                description: property.violations[0].short_desc,
-                details: property.violations[0].details,
-                currentSituation: property.violations[0].current_situation,
-                resolutionDate: property.violations[0].resolution_date,
-                complianceStatus: property.violations[0].compliance_status
-            };
+            data.codeViolation = { complaint: property.violations[0].complaint, issueDate: property.violations[0].issue_date, type: property.violations[0].types, description: property.violations[0].short_desc, details: property.violations[0].details, currentSituation: property.violations[0].current_situation, resolutionDate: property.violations[0].resolution_date, complianceStatus: property.violations[0].compliance_status };
         }
-
-        // Out of State - add flag to owner data
-        if (motiveCode === 'OUT' && property.owners?.[0]) {
-            data.owner.isOutOfState = property.owners[0].is_out_of_state || false;
-        }
+        if (motiveCode === 'OUT' && property.owners?.[0]) data.owner.isOutOfState = property.owners[0].is_out_of_state || false;
 
         res.json({ success: true, data });
-        console.log(`[GET_PROPERTY] Response sent for ID: ${id}`);
-
     } catch (err) {
         console.error('GetProperty Error:', err);
         res.status(500).json({ success: false, error: err.message });

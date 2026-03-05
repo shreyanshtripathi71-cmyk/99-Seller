@@ -1,0 +1,188 @@
+--- ALL MODELS AND ATTRIBUTES ---
+
+Model: AdminActivity
+Attributes: id, type, primaryKey, autoIncrement, allowNull, type, type, allowNull, message, type, allowNull, details, type, allowNull
+--------------------
+Model: Auction
+Attributes: AAuctionID, type, primaryKey, autoIncrement, allowNull, AAuctionDateTime, type, allowNull, AAuctionPlace, type, allowNull, AAuctionPlaceAddr1, type, allowNull, AAuctionPlaceAddr2, type, allowNull, AAuctionCity, type, allowNull, AAuctionState, type, allowNull, AAuctionZip, type, allowNull, minimum_bid, type, allowNull, AAuctionDescription, type, allowNull, APropertyID, type, allowNull, references, model, key, onDelete, onUpdate
+--------------------
+Model: Auctioneer
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull, address, type, allowNull, phone, type, allowNull, email, type, allowNull, web_site, type, allowNull, html, type, allowNull, type, type, allowNull, comment
+--------------------
+Model: BorrowerNamePattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, borrower_name_pattern, type, allowNull
+--------------------
+Model: Cache
+Attributes: key, type, primaryKey, allowNull, value, type, allowNull
+--------------------
+Model: CityCounty
+Attributes: id, type, primaryKey, autoIncrement, allowNull, city, type, allowNull, county_id, type, allowNull, references, model, key, onDelete, onUpdate
+--------------------
+Model: CityStateZip
+Attributes: id, type, primaryKey, autoIncrement, allowNull, city, type, allowNull, state, type, allowNull, zip, type, allowNull
+--------------------
+Model: County
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull, index, type, allowNull, use, type, allowNull, defaultValue, address_template, type, allowNull, num_fields, type, allowNull
+--------------------
+Model: CountyCityZip
+Attributes: id, type, primaryKey, autoIncrement, allowNull, county_id, type, allowNull, references, model, key, onDelete, onUpdate, city, type, allowNull, zip, type, allowNull
+--------------------
+Model: CrawledCounties
+Attributes: id, type, primaryKey, allowNull, defaultValue, date_time, type, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, county_id, type, allowNull, references, model, key, onDelete, onUpdate
+--------------------
+Model: CrawlerConfig
+Attributes: site_id, type, primaryKey, allowNull, references, model, key, onDelete, onUpdate, crawler_name, type, allowNull, proxy_yn, type, allowNull, time_delay_yn, type, allowNull, threads_yn, type, allowNull, rotate_proxies_yn, type, allowNull
+--------------------
+Model: CrawlerLogAll
+Attributes: crawler_log_all_id, type, primaryKey, autoIncrement, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, county, type, allowNull, city, type, allowNull, zipcode, type, allowNull, firstname, type, allowNull, middlename, type, allowNull, lastname, type, allowNull, streetnum, type, allowNull, streetname, type, allowNull, addressline2, type, allowNull, data_url, type, allowNull, text_dump, type, allowNull, failed_yn, type, allowNull
+--------------------
+Model: CrawlerRun
+Attributes: CrawlerId, type, primaryKey, autoIncrement, allowNull, Stage, type, allowNull, CrawlerFile, type, allowNull, LogFile, type, allowNull, CrawlerName, type, allowNull, CrDataType, type, allowNull, LastRunStart, type, allowNull, defaultValue, LastRunEnd, type, allowNull, defaultValue, RunStatus, type, allowNull, Proxy, type, allowNull, RotateProxy, type, allowNull, TimeDelay, type, allowNull, Enable, type, allowNull, RunDetails, type, allowNull
+--------------------
+Model: Divorce
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, case_number, type, allowNull, court_name, type, allowNull, filing_date, type, allowNull, legal_filing_date, type, allowNull, attorney_name, type, allowNull, divorce_type, type, allowNull, comment, petitioner_name, type, allowNull, respondent_name, type, allowNull, status, type, allowNull, comment, settlement_date, type, allowNull, notes, type, allowNull
+--------------------
+Model: EncryptValue
+Attributes: encryptvalue_id, type, primaryKey, autoIncrement, allowNull, enc_table_name, type, allowNull, enc_table_row_id, type, allowNull, enc_column_name, type, allowNull, encrypted_val, type, allowNull
+--------------------
+Model: ErroneousLinks
+Attributes: id, type, primaryKey, autoIncrement, allowNull, proaddress_id, type, allowNull, references, model, key, onDelete, onUpdate, ownername_id, type, allowNull, references, model, key, url, type, allowNull
+--------------------
+Model: Errors
+Attributes: id, type, primaryKey, autoIncrement, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, date_time, type, allowNull, text, type, allowNull
+--------------------
+Model: Eviction
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, court_date, type, allowNull, court_docket, type, allowNull, plaintiff_name, type, allowNull, court_desc, type, allowNull, court_room, type, allowNull, details, type, allowNull
+--------------------
+Model: ExportHistory
+Attributes: exportId, type, autoIncrement, primaryKey, username, type, allowNull, filename, type, allowNull, recordCount, type, defaultValue, format, type, allowNull, status, type, defaultValue, url, type, allowNull, createdAt, type, defaultValue
+--------------------
+Model: Feedback
+Attributes: id, type, primaryKey, autoIncrement, allowNull, Username, type, allowNull, references, model, key, onDelete, onUpdate, email, type, allowNull, type, type, allowNull, defaultValue, validate, isIn, message, type, allowNull, rating, type, allowNull, validate, min, max, status, type, allowNull, defaultValue, validate, isIn, adminNotes, type, allowNull, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: FilesUrls
+Attributes: id, type, primaryKey, autoIncrement, allowNull, url, type, allowNull, contents, type, allowNull, property_card, type, allowNull, parsed, type, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, county_id, type, allowNull, references, model, key, onDelete, onUpdate, html_md5, type, allowNull, proaddress_id, type, allowNull, references, model, key, onDelete, onUpdate, ownername_id, type, allowNull, references, model, key, onDelete, onUpdate, motive_type_id, type, allowNull, references, model, key, onDelete, onUpdate, PMotiveType, type, allowNull
+--------------------
+Model: FreeUser
+Attributes: Username, type, primaryKey, allowNull, references, model, key, onDelete, onUpdate, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: FsboCounties
+Attributes: county, type, primaryKey, allowNull, defaultValue, date_time, type, allowNull
+--------------------
+Model: History
+Attributes: id, type, primaryKey, autoIncrement, allowNull, page, type, allowNull, ad_number, type, allowNull, crawler_id, type, allowNull
+--------------------
+Model: Invoice
+Attributes: id, type, primaryKey, allowNull, Username, type, allowNull, references, model, key, onDelete, onUpdate, amount, type, allowNull, currency, type, allowNull, defaultValue, status, type, allowNull, defaultValue, validate, isIn, date, type, allowNull, defaultValue, description, type, allowNull, downloadUrl, type, allowNull, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: LenderAddressPattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, lender_address_pattern, type, allowNull
+--------------------
+Model: LenderNamePattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, lender_name_pattern, type, allowNull
+--------------------
+Model: Loan
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, deed_id, type, allowNull, borrower_name, type, allowNull, lender_name, type, allowNull, lender_address, type, allowNull, datetime, type, allowNull, loan_amount, type, allowNull, total_default_amount, type, allowNull, foreclosure_stage, type, allowNull, lis_pendens_date, type, allowNull, arrears_amount, type, allowNull, default_status, type, allowNull
+--------------------
+Model: LoanAmountPattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, loan_amount_pattern, type, allowNull
+--------------------
+Model: MotiveTypes
+Attributes: id, type, primaryKey, autoIncrement, allowNull, code, type, allowNull, name, type, allowNull
+--------------------
+Model: Owner
+Attributes: id, type, primaryKey, autoIncrement, allowNull, OLastName, type, allowNull, OMiddleName, type, allowNull, OFirstName, type, allowNull, OStreetAddr1, type, allowNull, OStreetAddr2, type, allowNull, OCity, type, allowNull, OState, type, allowNull, OZip, type, allowNull, OProperty_id, type, allowNull, references, model, key, onDelete, onUpdate, insert_id, type, allowNull, is_out_of_state, type, allowNull, defaultValue, comment, email, type, allowNull
+--------------------
+Model: Ownername
+Attributes: id, type, primaryKey, autoIncrement, allowNull, PLastName, type, allowNull, PMiddleName, type, allowNull, PFirstName, type, allowNull, PcompanyName, type, allowNull, PMotiveType, type, allowNull, counties, type, allowNull, html, type, allowNull
+--------------------
+Model: OwnerNamePattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, owner_name_pattern, type, allowNull
+--------------------
+Model: PagesUrls
+Attributes: id, type, primaryKey, autoIncrement, allowNull, url, type, allowNull, use, type, allowNull, date_time, type, allowNull, page, type, allowNull, county_id, type, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, motive_type_id, type, allowNull, references, model, key, onDelete, onUpdate
+--------------------
+Model: PaymentMethod
+Attributes: id, type, primaryKey, allowNull, Username, type, allowNull, references, model, key, onDelete, onUpdate, type, type, allowNull, validate, isIn, last4, type, allowNull, brand, type, allowNull, expiryMonth, type, allowNull, expiryYear, type, allowNull, email, type, allowNull, comment, isDefault, type, allowNull, defaultValue, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: Poppin
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull, type, type, allowNull, title, type, allowNull, message, type, allowNull, buttonText, type, allowNull, buttonLink, type, allowNull, secondaryButtonText, type, allowNull, secondaryButtonLink, type, allowNull, imageUrl, type, allowNull, backgroundColor, type, allowNull, defaultValue, textColor, type, allowNull, defaultValue, accentColor, type, allowNull, position, type, allowNull, defaultValue, trigger, type, allowNull, defaultValue, triggerValue, type, allowNull, pages, type, allowNull, comment, isActive, type, defaultValue, priority, type, defaultValue, showOnMobile, type, defaultValue, showOnDesktop, type, defaultValue, dismissable, type, defaultValue, showOnce, type, defaultValue, emailPlaceholder, type, allowNull, successMessage, type, allowNull, startDate, type, allowNull, endDate, type, allowNull, countdownEnd, type, allowNull
+--------------------
+Model: PremiumUser
+Attributes: Username, type, primaryKey, allowNull, references, model, key, onDelete, onUpdate, subscriptionId, type, allowNull, references, model, key, onDelete, onUpdate, subscriptionStart, type, allowNull, defaultValue, subscriptionEnd, type, allowNull, paymentStatus, type, allowNull, defaultValue, validate, isIn, autoRenew, type, allowNull, defaultValue, lastPaymentDate, type, allowNull, nextBillingDate, type, allowNull, usageStats, type, allowNull, defaultValue, comment, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: Proaddress
+Attributes: id, type, primaryKey, autoIncrement, allowNull, listing_id, type, allowNull, PStreetNum, type, allowNull, backup_street_name, type, allowNull, PStreetName, type, allowNull, PSuiteNum, type, allowNull, Pcity, type, allowNull, PState, type, allowNull, Pzip, type, allowNull, word, type, allowNull, abbreviation, type, allowNull, owner_name, type, allowNull, PMotiveType, type, allowNull, counties, type, allowNull, price, type, allowNull, url, type, allowNull, beds, type, allowNull, baths, type, allowNull, owner_mailing_address, type, allowNull, owner_current_state, type, allowNull, proptype, type, allowNull, square_feet, type, allowNull, PYearBuilt, type, allowNull, floors, type, allowNull, school_district, type, allowNull, garage_size, type, allowNull, lot_size, type, allowNull, amenities, type, allowNull, comments, type, allowNull, owner_phone, type, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, DATE_TIMEOFEXTRACTION, type, allowNull, parsed, type, allowNull, auctioneer, type, allowNull, contact_image, type, allowNull, comment, type, allowNull, auctioneer_id, type, allowNull, references, model, key, onDelete, onUpdate, sale_date, type, allowNull, page_id, type, allowNull, county_fixed, type, allowNull, case_number, type, allowNull, deed_book_page, type, allowNull, ownername_id, type, allowNull, references, model, key, onDelete, onUpdate, property_trust_deed_id, type, allowNull, references, model, key, onDelete, onUpdate, trusteename, type, allowNull, trusteecompanyname, type, allowNull, trusteeaddress, type, allowNull, trusteecity, type, allowNull, trusteestate, type, allowNull, trusteezip, type, allowNull, trusteephone, type, allowNull, trusteeemail, type, allowNull, trusteewebsite, type, allowNull, trusteetype, type, allowNull, auction_amt, type, allowNull, auctiondatetime, type, allowNull, auctionplace, type, allowNull, auctionplaceaddr1, type, allowNull, auctionplaceaddr2, type, allowNull, auctioncity, type, allowNull, auctionstate, type, allowNull, auctionzip, type, allowNull, auctiondescription, type, allowNull, auctioneername, type, allowNull, auctioneercompanyname, type, allowNull, auctioneeraddress, type, allowNull, auctioneerphone, type, allowNull, auctioneeremail, type, allowNull, auctioneerweb_site, type, allowNull, auctioneerhtml, type, allowNull, court_docket, type, allowNull, court_date, type, allowNull, street_name_post_type, type, allowNull, sale_time, type, allowNull, skip_row, type, allowNull, violation_complaint, type, allowNull, violation_issue_date, type, allowNull, violation_types, type, allowNull, violation_total, type, allowNull, violation_desc, type, allowNull, violation_details, type, allowNull, eviction_owner_lawyer_name, type, allowNull, hash, type, allowNull, streetnameposttype, type, allowNull, violation_issued_by, type, allowNull, PLastName, type, allowNull, PMiddleName, type, allowNull, PFirstName, type, allowNull, PcompayName, type, allowNull
+--------------------
+Model: Probate
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, case_number, type, allowNull, probate_court, type, allowNull, probate_court_county, type, allowNull, filing_date, type, allowNull, date_of_death, type, allowNull, estate_type, type, allowNull, comment, executor_name, type, allowNull, executor_contact, type, allowNull, estate_value, type, allowNull, status, type, allowNull, comment, notes, type, allowNull
+--------------------
+Model: Property
+Attributes: id, type, primaryKey, autoIncrement, allowNull, PStreetAddr1, type, allowNull, PStreetAddr2, type, allowNull, Pcity, type, allowNull, Pstate, type, allowNull, Pzip, type, allowNull, Pcounty, type, allowNull, PBase, type, allowNull, PBeds, type, allowNull, PBaths, type, allowNull, PLandBuilding, type, allowNull, PType, type, allowNull, PLastSoldAmt, type, allowNull, PLastSoldDate, type, allowNull, PTotLandArea, type, allowNull, PTotBuildingArea, type, allowNull, PTotSQFootage, type, allowNull, PYearBuilt, type, allowNull, PAppraisedBuildingAmt, type, allowNull, PAppraisedLandAmt, type, allowNull, PTotAppraisedAmt, type, allowNull, motive_type_id, type, allowNull, references, model, key, onDelete, onUpdate, auctioneer_id, type, allowNull, references, model, key, onDelete, onUpdate, proaddress_id, type, allowNull, references, model, key, onDelete, onUpdate, PFilesUrlsId, type, allowNull, references, model, key, onDelete, onUpdate, PAuctioneerID, type, allowNull, PComments, type, allowNull, PDateFiled, type, allowNull, PListingID, type, allowNull, local_image_path, type, allowNull
+--------------------
+Model: PropertyAddressPattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, property_address_pattern, type, allowNull
+--------------------
+Model: PropertySkip
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull, PStreetNum, type, allowNull, PStreetName, type, allowNull, Pzip, type, allowNull, skip, type, allowNull, type, type, allowNull, Pcity, type, allowNull, PState, type, allowNull, counties, type, allowNull
+--------------------
+Model: PropertyTrustDeed
+Attributes: id, type, primaryKey, autoIncrement, allowNull, deed_id, type, allowNull, county, type, allowNull, property_address, type, allowNull, owner_name, type, allowNull, borrower_name, type, allowNull, lender_name, type, allowNull, lender_address, type, allowNull, trustee_name, type, allowNull, trustee_address, type, allowNull, property_id, type, allowNull, defaultValue, datetime, type, allowNull, loan_amount, type, allowNull
+--------------------
+Model: PropertyTrustDeedSkip
+Attributes: id, type, primaryKey, autoIncrement, allowNull, trust_deed_doc, type, allowNull, dttm, type, allowNull
+--------------------
+Model: Proxy
+Attributes: proxy_id, type, primaryKey, autoIncrement, allowNull, proxy_site_provider, type, allowNull, proxy_site_url, type, allowNull, proxy_site_port, type, allowNull, userid, type, allowNull, encryption_id, type, allowNull, path_to_password, type, allowNull
+--------------------
+Model: Report
+Attributes: id, type, primaryKey, autoIncrement, allowNull, date, type, allowNull
+--------------------
+Model: Request
+Attributes: id, type, primaryKey, autoIncrement, allowNull, RS_Num, type, allowNull, streetNum, type, allowNull, streetName, type, allowNull, locDescription, type, allowNull
+--------------------
+Model: RestartRow
+Attributes: restart_row_id, type, primaryKey, autoIncrement, allowNull, site_id, type, allowNull, references, model, key, onDelete, onUpdate, county, type, allowNull, city, type, allowNull, zipcode, type, allowNull, data_url, type, allowNull
+--------------------
+Model: RunDates
+Attributes: site_id, type, primaryKey, allowNull, references, model, key, onDelete, onUpdate, min_run_dt, type, allowNull, max_run_dt, type, allowNull
+--------------------
+Model: SavedProperty
+Attributes: id, type, primaryKey, autoIncrement, Username, type, allowNull, references, model, key, propertyId, type, allowNull, notes, type, allowNull
+--------------------
+Model: SavedSearch
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull, filters, type, allowNull, Username, type, allowNull, references, model, key, onDelete, onUpdate
+--------------------
+Model: Site
+Attributes: id, type, primaryKey, autoIncrement, allowNull, group_id, type, allowNull, references, model, key, onDelete, onUpdate, url, type, allowNull, module, type, allowNull, owner_format, type, allowNull, property_format, type, allowNull, tables_to_use, type, allowNull, last_run, type, allowNull, priority, type, allowNull, crawler_name, type, allowNull
+--------------------
+Model: SiteContent
+Attributes: id, type, primaryKey, autoIncrement, allowNull, key, type, allowNull, unique, value, type, allowNull, contentType, type, allowNull, defaultValue
+--------------------
+Model: SitesGroups
+Attributes: id, type, primaryKey, autoIncrement, allowNull, name, type, allowNull
+--------------------
+Model: Subscription
+Attributes: subscriptionId, type, primaryKey, autoIncrement, allowNull, planName, type, allowNull, defaultValue, validate, isIn, price, type, allowNull, duration, type, allowNull, comment, features, type, allowNull, defaultValue, comment, status, type, allowNull, defaultValue, validate, isIn, description, type, allowNull, defaultValue, popular, type, allowNull, defaultValue, createdAt, type, allowNull, defaultValue, updatedAt, type, allowNull, defaultValue
+--------------------
+Model: TaxLien
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, tax_year, type, allowNull, comment, amount_owed, type, allowNull, last_tax_year_paid, type, allowNull, lien_date, type, allowNull, tax_authority, type, allowNull, comment, lien_number, type, allowNull, status, type, allowNull, comment, sale_date, type, allowNull, comment, redemption_period_end, type, allowNull, notes, type, allowNull
+--------------------
+Model: TimeDelay
+Attributes: site_id, type, primaryKey, allowNull, references, model, key, onDelete, onUpdate, delay_min_secs, type, allowNull, delay_max_secs, type, allowNull
+--------------------
+Model: Trustee
+Attributes: TTrusteeID, type, primaryKey, autoIncrement, allowNull, TTrusteeName, type, allowNull, TTrusteeAddress, type, allowNull, TTRUSTEECity, type, allowNull, TTRUSTEEState, type, allowNull, TTRUSTEEZip, type, allowNull, TTrusteePhone, type, allowNull, TTrusteeEmail, type, allowNull, TTrusteeWebSite, type, allowNull, type, type, allowNull
+--------------------
+Model: TrusteeAddressPattern
+Attributes: id, type, primaryKey, autoIncrement, allowNull, pattern_level, type, allowNull, trustee_address_pattern, type, allowNull
+--------------------
+Model: UserLogin
+Attributes: Username, type, primaryKey, allowNull, unique, FirstName, type, allowNull, LastName, type, allowNull, Email, type, allowNull, Contact, type, allowNull, Address, type, allowNull, City, type, allowNull, State, type, allowNull, Pin, type, allowNull, Password, type, allowNull, UserType, type, allowNull, validate, isIn, ResetToken, type, allowNull, ResetTokenExpires, type, allowNull
+--------------------
+Model: Violation
+Attributes: id, type, primaryKey, autoIncrement, allowNull, property_id, type, allowNull, references, model, key, onDelete, onUpdate, complaint, type, allowNull, issue_date, type, allowNull, types, type, allowNull, short_desc, type, allowNull, fine_amount, type, allowNull, remediation_deadline, type, allowNull, details, type, allowNull, current_situation, type, allowNull, comment, resolution_date, type, allowNull, compliance_status, type, allowNull, comment
+--------------------
+Model: ZipCitySt
+Attributes: id, type, primaryKey, autoIncrement, allowNull, zip, type, allowNull, county, type, allowNull, state, type, allowNull
+--------------------

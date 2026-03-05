@@ -188,7 +188,8 @@ const Homepage = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
             style={{ fontSize: 42, fontWeight: 700, marginBottom: 60 }}
           >
-            {dealShowcase.title || ""}
+            <span style={{ color: '#ffffff' }}>Real Deals. </span>
+            <span style={{ color: '#3b82f6' }}>Real Profit.</span>
           </motion.h2>
 
           <div className="row">
@@ -205,7 +206,7 @@ const Homepage = () => {
                     <div style={{ position: "absolute", top: 16, right: 16, background: "#2563eb", color: "#fff", padding: "4px 12px", borderRadius: 12, fontSize: 12, fontWeight: 700 }}>{deal.badge}</div>
                   </div>
                   <div style={{ padding: 24, textAlign: "left" }}>
-                    <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{deal.title}</h3>
+                    <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, color: '#ffffff' }}>{deal.title}</h3>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #334155", paddingTop: 16, marginTop: 16 }}>
                       <div>
                         <p style={{ fontSize: 12, color: "#94a3b8", marginBottom: 0 }}>Net Profit / Fee</p>

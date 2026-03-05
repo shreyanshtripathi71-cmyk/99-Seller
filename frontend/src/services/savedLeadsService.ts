@@ -2,7 +2,7 @@
 import { Lead } from "@/components/search/components/LeadTableView";
 import axios from "axios";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/saved-properties`;
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}/api/saved-properties`;
 
 // Get headers with token
 const getHeaders = () => {

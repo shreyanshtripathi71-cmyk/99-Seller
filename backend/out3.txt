@@ -1,0 +1,9 @@
+﻿[dotenv@17.2.3] injecting env (10) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+[DB_DEBUG] Railway/Env Detection:
+[DB_DEBUG] MYSQLHOST: MISSING
+[DB_DEBUG] MYSQL_URL: MISSING
+[DB_DEBUG] NODE_ENV: development
+[DB_INIT] Falling back to standard config (likely local)
+Γ£à Connected to DB
+  Γ£ô Found motive_type OOS (id=9)

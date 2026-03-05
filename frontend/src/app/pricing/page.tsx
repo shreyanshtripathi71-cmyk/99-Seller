@@ -11,16 +11,13 @@ import { useAuth } from "@/context/AuthContext";
 /* --- Default content (CMS fallback) --- */
 const defaultContent = {
     pricingHeader: {
-        title: "Our",
-        titleHighlight: "Pricing",
-        subtitle: "Choose the plan that fits your business. No hidden fees, cancel anytime."
+        title: "Stop Losing Deals to",
+        titleHighlight: "Faster Investors",
+        subtitle: "The all-in-one proprietary data platform for serious real estate investors. Go from hunting to closing."
     },
     plans: [
         {
-            id: "starter",
-            name: "Free",
-            price: "0",
-            period: "forever",
+            id: "starter", name: "Free", price: "0", period: "forever",
             description: "Get started and explore the platform",
             features: [
                 { text: "50 leads per month", included: true },
@@ -32,14 +29,10 @@ const defaultContent = {
                 { text: "All 9 seller motives", included: false },
                 { text: "Priority support", included: false }
             ],
-            buttonText: "Get Started Free",
-            popular: false
+            buttonText: "Get Started Free", popular: false
         },
         {
-            id: "monthly",
-            name: "Pro Monthly",
-            price: "50",
-            period: "month",
+            id: "monthly", name: "Pro Monthly", price: "50", period: "month",
             description: "Full access, billed monthly",
             features: [
                 { text: "Unlimited leads", included: true },
@@ -51,16 +44,11 @@ const defaultContent = {
                 { text: "Priority support", included: true },
                 { text: "Full owner contact info", included: true }
             ],
-            buttonText: "Start Pro Monthly",
-            popular: true
+            buttonText: "Start Pro Monthly", popular: true
         },
         {
-            id: "quarterly",
-            name: "Pro Quarterly",
-            price: "120",
-            period: "quarter",
-            description: "Best value \u2014 save 20%",
-            saveBadge: "Save $30",
+            id: "quarterly", name: "Pro Quarterly", price: "120", period: "quarter",
+            description: "Best value \u2014 save 20%", saveBadge: "Save $30",
             features: [
                 { text: "Everything in Pro Monthly", included: true },
                 { text: "All 50 states", included: true },
@@ -71,8 +59,7 @@ const defaultContent = {
                 { text: "Priority support", included: true },
                 { text: "Full owner contact info", included: true }
             ],
-            buttonText: "Start Pro Quarterly",
-            popular: false
+            buttonText: "Start Pro Quarterly", popular: false
         }
     ],
     guarantee: {
@@ -86,6 +73,33 @@ const defaultContent = {
         { q: "Do I get phone numbers and addresses?", a: "Yes \u2014 paid plan members get full access to owner phone numbers, email addresses, and mailing addresses." }
     ]
 };
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
+};
+
+const scaleIn = {
+    hidden: { opacity: 0, scale: 0.92 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } }
+};
+
+/* ===========================
+   COMPARISON DATA
+   Manual Way vs 99Sellers Way
+   =========================== */
+const comparisonRows = [
+    { category: "Lead Discovery", manual: "Drive for hours scouting neighborhoods", sellers: "Instant nationwide distressed property search" },
+    { category: "Data Sources", manual: "Manually search county records one by one", sellers: "Automated aggregation from every county, daily" },
+    { category: "Cost", manual: "$500+/mo for outdated, generic lead lists", sellers: "Starting at $50/mo for unlimited, targeted leads" },
+    { category: "Contact Info", manual: "Pay extra for skip-tracing services", sellers: "Built-in skip tracing with phone & email" },
+    { category: "Data Freshness", manual: "Lists are weeks or months old", sellers: "Updated daily — never miss a new filing" },
+    { category: "Coverage", manual: "Limited to 1 county or market area", sellers: "All 50 states, every county, instantly" },
+    { category: "Filtering", manual: "No way to filter by seller motivation", sellers: "9 distress motive types with advanced filters" },
+    { category: "Export", manual: "Manual copy-paste into spreadsheets", sellers: "One-click CSV/CRM export" },
+    { category: "Lead Quality", manual: "Mixed bag — many unqualified leads", sellers: "Every lead is a verified motivated seller" },
+    { category: "Speed to Contact", manual: "Days to research each prospect", sellers: "Seconds — owner info ready instantly" },
+];
 
 const PricingPage = () => {
     const { isAuthenticated } = useAuth();
@@ -111,7 +125,7 @@ const PricingPage = () => {
         <div className={styles.homepage} style={{ background: '#fff' }}>
             <Header />
 
-            {/* HERO HEADER — matches About Us style */}
+            {/* ========== HERO HEADER ========== */}
             <section style={{
                 background: '#0f172a',
                 padding: '140px 24px 80px',
@@ -123,20 +137,13 @@ const PricingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h1 style={{
-                            fontSize: 48,
-                            fontWeight: 700,
-                            marginBottom: 20,
-                        }}>
+                        <h1 style={{ fontSize: 48, fontWeight: 700, marginBottom: 20 }}>
                             <span style={{ color: '#ffffff' }}>{pricingHeader.title} </span>
                             <span style={{ color: '#2563eb' }}>{pricingHeader.titleHighlight}</span>
                         </h1>
                         <p style={{
-                            fontSize: 22,
-                            color: '#94a3b8',
-                            lineHeight: 1.7,
-                            maxWidth: 600,
-                            margin: '0 auto'
+                            fontSize: 22, color: '#94a3b8', lineHeight: 1.7,
+                            maxWidth: 600, margin: '0 auto'
                         }}>
                             {pricingHeader.subtitle}
                         </p>
@@ -144,154 +151,434 @@ const PricingPage = () => {
                 </div>
             </section>
 
-            {/* PRICING CARDS */}
-            <section style={{ padding: '60px 24px 80px', background: '#fff' }}>
+            {/* ========== SECTION 1: IMAGE | CONTENT ========== */}
+            <section style={{ padding: '100px 24px', background: '#fff' }}>
                 <div style={{
-                    maxWidth: 1100,
-                    margin: '0 auto',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                    gap: 24,
-                    alignItems: 'stretch'
+                    maxWidth: 1100, margin: '0 auto',
+                    display: 'grid', gridTemplateColumns: '1fr 1fr',
+                    gap: 60, alignItems: 'center'
                 }}>
-                    {plans.map((plan: any, index: number) => {
-                        const isPopular = plan.popular;
-                        return (
-                            <motion.div
-                                key={plan.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1, duration: 0.4 }}
-                                style={{
-                                    background: isPopular ? '#0f172a' : '#fff',
-                                    border: isPopular ? '2px solid #0f172a' : '1px solid #e2e8f0',
-                                    borderRadius: 20,
-                                    padding: '40px 32px 36px',
-                                    display: 'flex',
-                                    flexDirection: 'column' as const,
-                                    position: 'relative' as const,
-                                }}
-                                whileHover={{
-                                    y: -4,
-                                    boxShadow: isPopular
-                                        ? '0 24px 48px rgba(15, 23, 42, 0.25)'
-                                        : '0 12px 32px rgba(0, 0, 0, 0.08)'
-                                }}
-                            >
-                                {isPopular && (
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={scaleIn}
+                    >
+                        <div style={{
+                            borderRadius: 24, overflow: 'hidden',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.12)'
+                        }}>
+                            <img
+                                src="/images/pricing/hero-investor.png"
+                                alt="Smart real estate investing"
+                                style={{ width: '100%', height: 'auto', display: 'block' }}
+                            />
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={fadeInUp}
+                    >
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            padding: '6px 16px', background: '#eff6ff',
+                            borderRadius: 50, marginBottom: 20,
+                            fontSize: 13, fontWeight: 700, color: '#2563eb',
+                            textTransform: 'uppercase' as const, letterSpacing: '0.04em'
+                        }}>
+                            <i className="fa-solid fa-bolt" style={{ fontSize: 11 }} />
+                            Smarter Investing
+                        </div>
+                        <h2 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 16, lineHeight: 1.2 }}>
+                            Why Top Investors Choose{' '}
+                            <span style={{ color: '#2563eb' }}>99Sellers</span>
+                        </h2>
+                        <p style={{ fontSize: 17, color: '#475569', lineHeight: 1.8, marginBottom: 24 }}>
+                            While others are driving for dollars and combing through outdated lists,
+                            99Sellers users are closing deals from their laptop. Our platform delivers
+                            verified, motivated seller leads straight to your dashboard — with full contact
+                            info, equity data, and seller motive analysis.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 12 }}>
+                            {[
+                                'Instant access to pre-foreclosures, probate, divorce & more',
+                                'Owner phone, email & mailing address included',
+                                'Updated daily from county records nationwide'
+                            ].map((text, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                     <div style={{
-                                        position: 'absolute' as const, top: -13, left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        background: '#2563eb', color: '#fff',
-                                        fontSize: 12, fontWeight: 700,
-                                        padding: '6px 18px', borderRadius: 50,
-                                        letterSpacing: '0.04em', textTransform: 'uppercase' as const
+                                        width: 24, height: 24, borderRadius: '50%',
+                                        background: '#eff6ff', display: 'flex',
+                                        alignItems: 'center', justifyContent: 'center', flexShrink: 0
                                     }}>
-                                        Most Popular
+                                        <i className="fa-solid fa-check" style={{ fontSize: 11, color: '#2563eb' }} />
                                     </div>
-                                )}
-
-                                {plan.saveBadge && !isPopular && (
-                                    <div style={{
-                                        position: 'absolute' as const, top: -13, left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        background: '#2563eb', color: '#fff',
-                                        fontSize: 12, fontWeight: 700,
-                                        padding: '6px 18px', borderRadius: 50,
-                                        letterSpacing: '0.04em'
-                                    }}>
-                                        {plan.saveBadge}
-                                    </div>
-                                )}
-
-                                <div style={{ marginBottom: 24 }}>
-                                    <h3 style={{
-                                        fontSize: 22, fontWeight: 700,
-                                        color: isPopular ? '#fff' : '#0f172a',
-                                        marginBottom: 4
-                                    }}>
-                                        {plan.name}
-                                    </h3>
-                                    <p style={{
-                                        fontSize: 14, margin: 0,
-                                        color: isPopular ? 'rgba(255,255,255,0.6)' : '#94a3b8'
-                                    }}>
-                                        {plan.description}
-                                    </p>
+                                    <span style={{ fontSize: 15, color: '#334155' }}>{text}</span>
                                 </div>
-
-                                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
-                                    <span style={{
-                                        fontSize: 16, fontWeight: 600,
-                                        color: isPopular ? 'rgba(255,255,255,0.7)' : '#64748b'
-                                    }}>$</span>
-                                    <span style={{
-                                        fontSize: 48, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em',
-                                        color: isPopular ? '#fff' : '#0f172a'
-                                    }}>
-                                        {plan.price}
-                                    </span>
-                                    {plan.period !== "forever" && (
-                                        <span style={{
-                                            fontSize: 15, marginLeft: 2,
-                                            color: isPopular ? 'rgba(255,255,255,0.5)' : '#94a3b8'
-                                        }}>
-                                            /{plan.period}
-                                        </span>
-                                    )}
-                                </div>
-
-                                <Link
-                                    href={getPlanLink(plan)}
-                                    style={{
-                                        display: 'block', width: '100%', textAlign: 'center' as const,
-                                        padding: '14px 24px', borderRadius: 12,
-                                        fontSize: 15, fontWeight: 700, textDecoration: 'none',
-                                        marginBottom: 28, transition: 'all 0.2s ease',
-                                        ...(isPopular
-                                            ? { background: '#2563eb', color: '#fff', border: 'none' }
-                                            : { background: '#f8fafc', color: '#0f172a', border: '1px solid #e2e8f0' }
-                                        )
-                                    }}
-                                >
-                                    {plan.buttonText}
-                                </Link>
-
-                                <div style={{
-                                    height: 1, marginBottom: 24,
-                                    background: isPopular ? 'rgba(255,255,255,0.1)' : '#f1f5f9'
-                                }} />
-
-                                <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
-                                    {plan.features.map((feature: any, i: number) => (
-                                        <li key={i} style={{
-                                            display: 'flex', alignItems: 'center', gap: 10,
-                                            marginBottom: 14, fontSize: 14,
-                                            color: feature.included
-                                                ? (isPopular ? 'rgba(255,255,255,0.85)' : '#334155')
-                                                : (isPopular ? 'rgba(255,255,255,0.3)' : '#cbd5e1'),
-                                            textDecoration: feature.included ? 'none' : 'line-through'
-                                        }}>
-                                            <i
-                                                className={"fa-solid " + (feature.included ? 'fa-check' : 'fa-xmark')}
-                                                style={{
-                                                    fontSize: 12, width: 20, textAlign: 'center' as const,
-                                                    color: feature.included
-                                                        ? (isPopular ? '#60a5fa' : '#2563eb')
-                                                        : (isPopular ? 'rgba(255,255,255,0.2)' : '#d1d5db')
-                                                }}
-                                            />
-                                            {feature.text}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </motion.div>
-                        );
-                    })}
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
             </section>
 
-            {/* GUARANTEE */}
+            {/* ========== SECTION 2: CONTENT | IMAGE ========== */}
+            <section style={{ padding: '100px 24px', background: '#f8fafc' }}>
+                <div style={{
+                    maxWidth: 1100, margin: '0 auto',
+                    display: 'grid', gridTemplateColumns: '1fr 1fr',
+                    gap: 60, alignItems: 'center'
+                }}>
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={fadeInUp}
+                    >
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            padding: '6px 16px', background: '#fff',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: 50, marginBottom: 20,
+                            fontSize: 13, fontWeight: 700, color: '#0f172a',
+                            textTransform: 'uppercase' as const, letterSpacing: '0.04em'
+                        }}>
+                            <i className="fa-solid fa-clock-rotate-left" style={{ fontSize: 11 }} />
+                            Time is Money
+                        </div>
+                        <h2 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 16, lineHeight: 1.2 }}>
+                            <span style={{ color: '#0f172a' }}>Stop </span>
+                            <span style={{ color: '#0f172a' }}>Wasting Time on </span>
+                            <span style={{ color: '#2563eb' }}>Bad Data</span>
+                        </h2>
+                        <p style={{ fontSize: 17, color: '#475569', lineHeight: 1.8, marginBottom: 24 }}>
+                            The average investor spends 20+ hours per week researching leads manually.
+                            With 99Sellers, you get the same results in minutes. Our AI-driven filters
+                            identify properties with real equity and genuine seller motivation — so you
+                            only call leads worth your time.
+                        </p>
+                        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' as const }}>
+                            {[
+                                { num: '20x', label: 'Faster lead discovery' },
+                                { num: '98%', label: 'Data accuracy rate' },
+                                { num: '50', label: 'States covered' }
+                            ].map((stat, i) => (
+                                <div key={i} style={{ textAlign: 'center' as const }}>
+                                    <div style={{ fontSize: 32, fontWeight: 800, color: '#2563eb' }}>{stat.num}</div>
+                                    <div style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>{stat.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={scaleIn}
+                    >
+                        <div style={{
+                            borderRadius: 24, overflow: 'hidden',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.12)'
+                        }}>
+                            <img
+                                src="/images/pricing/old-vs-new.png"
+                                alt="Old way vs 99Sellers way"
+                                style={{ width: '100%', height: 'auto', display: 'block' }}
+                            />
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+
+            {/* ========== MANUAL WAY vs 99SELLERS — SIDE-BY-SIDE TABLE ========== */}
+            <section style={{ padding: '100px 24px', background: '#fff' }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={fadeInUp}
+                        style={{ textAlign: 'center', marginBottom: 48 }}
+                    >
+                        <h2 style={{ fontSize: 40, fontWeight: 800, marginBottom: 12 }}>
+                            <span style={{ color: '#0f172a' }}>The Manual Way vs </span>
+                            <span style={{ color: '#2563eb' }}>99Sellers</span>
+                        </h2>
+                        <p style={{ fontSize: 17, color: '#64748b', maxWidth: 550, margin: '0 auto' }}>
+                            See exactly how 99Sellers saves you time, money, and missed deals compared to traditional methods.
+                        </p>
+                    </motion.div>
+
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={scaleIn}
+                        style={{
+                            borderRadius: 20, overflow: 'hidden',
+                            border: '1px solid #e2e8f0',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.06)'
+                        }}
+                    >
+                        {/* Table Header */}
+                        <div style={{
+                            display: 'grid', gridTemplateColumns: '180px 1fr 1fr',
+                            background: '#0f172a', color: '#fff'
+                        }}>
+                            <div style={{ padding: '18px 24px', fontSize: 13, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.05em', color: '#94a3b8' }}>
+                                Category
+                            </div>
+                            <div style={{
+                                padding: '18px 24px', fontSize: 13, fontWeight: 700,
+                                textTransform: 'uppercase' as const, letterSpacing: '0.05em',
+                                color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8,
+                                borderLeft: '1px solid rgba(255,255,255,0.08)'
+                            }}>
+                                <i className="fa-solid fa-xmark" style={{ fontSize: 12 }} />
+                                Manual / Old Way
+                            </div>
+                            <div style={{
+                                padding: '18px 24px', fontSize: 13, fontWeight: 700,
+                                textTransform: 'uppercase' as const, letterSpacing: '0.05em',
+                                color: '#4ade80', display: 'flex', alignItems: 'center', gap: 8,
+                                borderLeft: '1px solid rgba(255,255,255,0.08)'
+                            }}>
+                                <i className="fa-solid fa-check" style={{ fontSize: 12 }} />
+                                99Sellers Way
+                            </div>
+                        </div>
+
+                        {/* Table Rows */}
+                        {comparisonRows.map((row, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    display: 'grid', gridTemplateColumns: '180px 1fr 1fr',
+                                    borderTop: '1px solid #f1f5f9',
+                                    background: i % 2 === 0 ? '#fff' : '#fafbfc',
+                                    transition: 'background 0.2s'
+                                }}
+                            >
+                                <div style={{
+                                    padding: '16px 24px', fontSize: 14, fontWeight: 700,
+                                    color: '#0f172a', display: 'flex', alignItems: 'center'
+                                }}>
+                                    {row.category}
+                                </div>
+                                <div style={{
+                                    padding: '16px 24px', fontSize: 14, color: '#94a3b8',
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    borderLeft: '1px solid #f1f5f9'
+                                }}>
+                                    <i className="fa-solid fa-xmark" style={{ color: '#ef4444', fontSize: 12, flexShrink: 0 }} />
+                                    {row.manual}
+                                </div>
+                                <div style={{
+                                    padding: '16px 24px', fontSize: 14, color: '#334155', fontWeight: 500,
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    borderLeft: '1px solid #f1f5f9'
+                                }}>
+                                    <i className="fa-solid fa-check" style={{ color: '#22c55e', fontSize: 12, flexShrink: 0 }} />
+                                    {row.sellers}
+                                </div>
+                            </div>
+                        ))}
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* ========== PRICING CARDS ========== */}
+            <section style={{ padding: '100px 24px 80px', background: '#fff' }}>
+                <div style={{ maxWidth: 800, margin: '0 auto 48px', textAlign: 'center' }}>
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+                        <h2 style={{ fontSize: 40, fontWeight: 800, marginBottom: 12 }}>
+                            <span style={{ color: '#0f172a' }}>Simple, Transparent </span>
+                            <span style={{ color: '#2563eb' }}>Pricing</span>
+                        </h2>
+                        <p style={{ fontSize: 17, color: '#64748b', maxWidth: 500, margin: '0 auto' }}>
+                            No hidden fees. No contracts. Cancel anytime. Start free and upgrade when you&apos;re ready.
+                        </p>
+                    </motion.div>
+                </div>
+
+                <div style={{
+                    maxWidth: 1100, margin: '0 auto',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: 24, alignItems: 'stretch'
+                }}>
+                    {/* FREE PLAN */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0, duration: 0.4 }}
+                        style={{
+                            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20,
+                            padding: '40px 32px 36px', display: 'flex', flexDirection: 'column' as const,
+                            position: 'relative' as const,
+                        }}
+                        whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0, 0, 0, 0.08)' }}
+                    >
+                        <div style={{ marginBottom: 24 }}>
+                            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Free</h3>
+                            <p style={{ fontSize: 14, margin: 0, color: '#94a3b8' }}>Get started and explore the platform</p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                            <span style={{ fontSize: 16, fontWeight: 600, color: '#64748b' }}>$</span>
+                            <span style={{ fontSize: 48, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', color: '#0f172a' }}>0</span>
+                            <span style={{ fontSize: 15, marginLeft: 2, color: '#94a3b8' }}>/forever</span>
+                        </div>
+                        <Link href={isAuthenticated ? "/search" : "/signup"} style={{
+                            display: 'block', width: '100%', textAlign: 'center' as const,
+                            padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+                            textDecoration: 'none', marginBottom: 28, transition: 'all 0.2s ease',
+                            background: '#f8fafc', color: '#0f172a', border: '1px solid #e2e8f0'
+                        }}>
+                            Get Started Free
+                        </Link>
+                        <div style={{ height: 1, marginBottom: 24, background: '#f1f5f9' }} />
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
+                            {[
+                                { text: '50 leads per month', included: true },
+                                { text: '1 county access', included: true },
+                                { text: 'Basic search filters', included: true },
+                                { text: 'Email support', included: true },
+                                { text: 'Skip tracing', included: false },
+                                { text: 'Unlimited exports', included: false },
+                                { text: 'All 9 seller motives', included: false },
+                                { text: 'Priority support', included: false },
+                            ].map((f, i) => (
+                                <li key={i} style={{
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    marginBottom: 14, fontSize: 14,
+                                    color: f.included ? '#334155' : '#cbd5e1',
+                                    textDecoration: f.included ? 'none' : 'line-through'
+                                }}>
+                                    <i className={"fa-solid " + (f.included ? 'fa-check' : 'fa-xmark')}
+                                        style={{
+                                            fontSize: 12, width: 20, textAlign: 'center' as const,
+                                            color: f.included ? '#2563eb' : '#d1d5db'
+                                        }} />
+                                    {f.text}
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+
+                    {/* PRO MONTHLY — POPULAR */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.4 }}
+                        style={{
+                            background: '#0f172a', border: '2px solid #0f172a', borderRadius: 20,
+                            padding: '40px 32px 36px', display: 'flex', flexDirection: 'column' as const,
+                            position: 'relative' as const,
+                        }}
+                        whileHover={{ y: -4, boxShadow: '0 24px 48px rgba(15, 23, 42, 0.25)' }}
+                    >
+                        <div style={{
+                            position: 'absolute' as const, top: -13, left: '50%',
+                            transform: 'translateX(-50%)', background: '#2563eb', color: '#fff',
+                            fontSize: 12, fontWeight: 700, padding: '6px 18px', borderRadius: 50,
+                            letterSpacing: '0.04em', textTransform: 'uppercase' as const
+                        }}>
+                            Most Popular
+                        </div>
+                        <div style={{ marginBottom: 24 }}>
+                            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Pro Monthly</h3>
+                            <p style={{ fontSize: 14, margin: 0, color: 'rgba(255,255,255,0.6)' }}>Full access, billed monthly</p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                            <span style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>$</span>
+                            <span style={{ fontSize: 48, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', color: '#fff' }}>50</span>
+                            <span style={{ fontSize: 15, marginLeft: 2, color: 'rgba(255,255,255,0.5)' }}>/month</span>
+                        </div>
+                        <Link href={getPlanLink({ id: 'monthly' })} style={{
+                            display: 'block', width: '100%', textAlign: 'center' as const,
+                            padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+                            textDecoration: 'none', marginBottom: 28, transition: 'all 0.2s ease',
+                            background: '#2563eb', color: '#fff', border: 'none'
+                        }}>
+                            Start Pro Monthly
+                        </Link>
+                        <div style={{ height: 1, marginBottom: 24, background: 'rgba(255,255,255,0.1)' }} />
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
+                            {[
+                                'Unlimited leads',
+                                'All 50 states',
+                                'All 9 seller motives',
+                                'Built-in skip tracing',
+                                'Unlimited CRM exports',
+                                'Daily fresh data',
+                                'Priority support',
+                                'Full owner contact info',
+                            ].map((text, i) => (
+                                <li key={i} style={{
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    marginBottom: 14, fontSize: 14, color: 'rgba(255,255,255,0.85)'
+                                }}>
+                                    <i className="fa-solid fa-check"
+                                        style={{ fontSize: 12, width: 20, textAlign: 'center' as const, color: '#60a5fa' }} />
+                                    {text}
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+
+                    {/* PRO QUARTERLY */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.4 }}
+                        style={{
+                            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20,
+                            padding: '40px 32px 36px', display: 'flex', flexDirection: 'column' as const,
+                            position: 'relative' as const,
+                        }}
+                        whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0, 0, 0, 0.08)' }}
+                    >
+                        <div style={{
+                            position: 'absolute' as const, top: -13, left: '50%',
+                            transform: 'translateX(-50%)', background: '#2563eb', color: '#fff',
+                            fontSize: 12, fontWeight: 700, padding: '6px 18px', borderRadius: 50,
+                            letterSpacing: '0.04em'
+                        }}>
+                            Save $30
+                        </div>
+                        <div style={{ marginBottom: 24 }}>
+                            <h3 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Pro Quarterly</h3>
+                            <p style={{ fontSize: 14, margin: 0, color: '#94a3b8' }}>Best value — save 20%</p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 28 }}>
+                            <span style={{ fontSize: 16, fontWeight: 600, color: '#64748b' }}>$</span>
+                            <span style={{ fontSize: 48, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', color: '#0f172a' }}>120</span>
+                            <span style={{ fontSize: 15, marginLeft: 2, color: '#94a3b8' }}>/quarter</span>
+                        </div>
+                        <Link href={getPlanLink({ id: 'quarterly' })} style={{
+                            display: 'block', width: '100%', textAlign: 'center' as const,
+                            padding: '14px 24px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+                            textDecoration: 'none', marginBottom: 28, transition: 'all 0.2s ease',
+                            background: '#f8fafc', color: '#0f172a', border: '1px solid #e2e8f0'
+                        }}>
+                            Start Pro Quarterly
+                        </Link>
+                        <div style={{ height: 1, marginBottom: 24, background: '#f1f5f9' }} />
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
+                            {[
+                                'Everything in Pro Monthly',
+                                'All 50 states',
+                                'All 9 seller motives',
+                                'Built-in skip tracing',
+                                'Unlimited CRM exports',
+                                'Daily fresh data',
+                                'Priority support',
+                                'Full owner contact info',
+                            ].map((text, i) => (
+                                <li key={i} style={{
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    marginBottom: 14, fontSize: 14, color: '#334155'
+                                }}>
+                                    <i className="fa-solid fa-check"
+                                        style={{ fontSize: 12, width: 20, textAlign: 'center' as const, color: '#2563eb' }} />
+                                    {text}
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* ========== GUARANTEE ========== */}
             <section style={{
                 padding: '48px 24px',
                 background: '#f8fafc',
@@ -327,216 +614,15 @@ const PricingPage = () => {
                 </div>
             </section>
 
-            {/* OLD WAY vs 99SELLERS WAY — side by side */}
-            <section style={{ padding: '80px 24px', background: '#fff' }}>
-                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-                    <h2 style={{
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                        fontWeight: 800, color: '#0f172a',
-                        textAlign: 'center', marginBottom: 12
-                    }}>
-                        The Old Way vs The <span style={{ color: '#2563eb' }}>99Sellers</span> Way
-                    </h2>
-                    <p style={{
-                        fontSize: 16, color: '#64748b', textAlign: 'center',
-                        marginBottom: 48, maxWidth: 550, margin: '0 auto 48px'
-                    }}>
-                        Stop wasting time with outdated methods. See how 99Sellers transforms your lead generation.
-                    </p>
 
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                        gap: 24,
-                        alignItems: 'stretch'
-                    }}>
-                        {/* OLD WAY */}
-                        <div style={{
-                            background: '#f8fafc',
-                            border: '1px solid #e2e8f0',
-                            borderRadius: 20,
-                            padding: '40px 32px',
-                            display: 'flex',
-                            flexDirection: 'column' as const
-                        }}>
-                            <div style={{
-                                display: 'inline-flex', alignItems: 'center', gap: 8,
-                                padding: '6px 16px', background: '#fff',
-                                border: '1px solid #e2e8f0', borderRadius: 50,
-                                marginBottom: 24, width: 'fit-content',
-                                fontSize: 13, fontWeight: 700, color: '#64748b',
-                                textTransform: 'uppercase' as const, letterSpacing: '0.04em'
-                            }}>
-                                <i className="fa-solid fa-clock-rotate-left" style={{ fontSize: 12 }} />
-                                The Old Way
-                            </div>
-
-                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
-                                {[
-                                    'Drive for hours searching neighborhoods',
-                                    'Manually search county records one by one',
-                                    'Pay $500+/mo for outdated lead lists',
-                                    'Cold call from purchased phone lists',
-                                    'Spend days skipping tracing leads',
-                                    'Miss deals because data is weeks old',
-                                    'Limited to one county or market',
-                                    'No way to filter by seller motivation',
-                                    'Waste money on unqualified leads',
-                                ].map((text, i) => (
-                                    <li key={i} style={{
-                                        display: 'flex', alignItems: 'flex-start', gap: 12,
-                                        marginBottom: 18, fontSize: 14,
-                                        color: '#64748b', lineHeight: 1.5
-                                    }}>
-                                        <i
-                                            className="fa-solid fa-xmark"
-                                            style={{
-                                                fontSize: 14, width: 22, textAlign: 'center' as const,
-                                                color: '#94a3b8', marginTop: 3, flexShrink: 0
-                                            }}
-                                        />
-                                        {text}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* 99SELLERS WAY */}
-                        <div style={{
-                            background: '#0f172a',
-                            border: '2px solid #0f172a',
-                            borderRadius: 20,
-                            padding: '40px 32px',
-                            display: 'flex',
-                            flexDirection: 'column' as const,
-                            position: 'relative' as const
-                        }}>
-                            <div style={{
-                                position: 'absolute' as const, top: -13, left: '50%',
-                                transform: 'translateX(-50%)',
-                                background: '#2563eb', color: '#fff',
-                                fontSize: 12, fontWeight: 700,
-                                padding: '6px 18px', borderRadius: 50,
-                                letterSpacing: '0.04em', textTransform: 'uppercase' as const
-                            }}>
-                                Smarter Approach
-                            </div>
-
-                            <div style={{
-                                display: 'inline-flex', alignItems: 'center', gap: 8,
-                                padding: '6px 16px', background: 'rgba(255,255,255,0.08)',
-                                border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50,
-                                marginBottom: 24, width: 'fit-content',
-                                fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)',
-                                textTransform: 'uppercase' as const, letterSpacing: '0.04em'
-                            }}>
-                                <i className="fa-solid fa-bolt" style={{ fontSize: 12, color: '#60a5fa' }} />
-                                The 99Sellers Way
-                            </div>
-
-                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
-                                {[
-                                    'Instant access to motivated seller leads',
-                                    'All 50 states — every county, automated',
-                                    'Starting at just $50/mo for unlimited leads',
-                                    'Built-in skip tracing with phone & email',
-                                    'Owner contact info ready in seconds',
-                                    'Daily fresh data — never miss a deal',
-                                    'Search any market nationwide instantly',
-                                    'Filter by all 9 distress motive types',
-                                    'Every lead is a motivated seller',
-                                ].map((text, i) => (
-                                    <li key={i} style={{
-                                        display: 'flex', alignItems: 'flex-start', gap: 12,
-                                        marginBottom: 18, fontSize: 14,
-                                        color: 'rgba(255,255,255,0.85)', lineHeight: 1.5
-                                    }}>
-                                        <i
-                                            className="fa-solid fa-check"
-                                            style={{
-                                                fontSize: 14, width: 22, textAlign: 'center' as const,
-                                                color: '#60a5fa', marginTop: 3, flexShrink: 0
-                                            }}
-                                        />
-                                        {text}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* COMPARE PLANS TABLE */}
-            <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
-                <div style={{ maxWidth: 800, margin: '0 auto' }}>
-                    <h2 style={{
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                        fontWeight: 800, color: '#0f172a',
-                        textAlign: 'center', marginBottom: 40
-                    }}>
-                        Compare <span style={{ color: '#2563eb' }}>Plans</span>
-                    </h2>
-
-                    <div style={{ borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-                        <div style={{
-                            display: 'grid', gridTemplateColumns: '1fr 100px 100px',
-                            padding: '16px 24px', background: '#fff',
-                            borderBottom: '1px solid #e2e8f0'
-                        }}>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.04em' }}>Feature</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.04em', textAlign: 'center' as const }}>Free</span>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase' as const, letterSpacing: '0.04em', textAlign: 'center' as const }}>Pro</span>
-                        </div>
-
-                        {[
-                            { feature: 'Monthly leads', free: '50', pro: 'Unlimited' },
-                            { feature: 'County coverage', free: '1', pro: 'All 50 states' },
-                            { feature: 'Seller motive types', free: 'Limited', pro: 'All 9 types' },
-                            { feature: 'Skip tracing', free: false, pro: true },
-                            { feature: 'CRM export', free: false, pro: true },
-                            { feature: 'Owner phone numbers', free: false, pro: true },
-                            { feature: 'Owner mailing address', free: false, pro: true },
-                            { feature: 'Daily data refresh', free: false, pro: true },
-                            { feature: 'Priority support', free: false, pro: true },
-                        ].map((row, i) => (
-                            <div
-                                key={i}
-                                style={{
-                                    display: 'grid', gridTemplateColumns: '1fr 100px 100px',
-                                    padding: '14px 24px',
-                                    borderBottom: i < 8 ? '1px solid #f1f5f9' : 'none',
-                                    background: i % 2 === 0 ? '#fff' : '#fafbfc'
-                                }}
-                            >
-                                <span style={{ fontSize: 14, color: '#334155', fontWeight: 500 }}>{row.feature}</span>
-                                <span style={{ textAlign: 'center' as const, fontSize: 14 }}>
-                                    {typeof row.free === 'boolean'
-                                        ? <i className={"fa-solid " + (row.free ? 'fa-check' : 'fa-xmark')} style={{ color: row.free ? '#2563eb' : '#d1d5db' }} />
-                                        : <span style={{ color: '#64748b', fontWeight: 500 }}>{row.free}</span>
-                                    }
-                                </span>
-                                <span style={{ textAlign: 'center' as const, fontSize: 14 }}>
-                                    {typeof row.pro === 'boolean'
-                                        ? <i className={"fa-solid " + (row.pro ? 'fa-check' : 'fa-xmark')} style={{ color: row.pro ? '#2563eb' : '#d1d5db' }} />
-                                        : <span style={{ color: '#0f172a', fontWeight: 600 }}>{row.pro}</span>
-                                    }
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* FAQ */}
+            {/* ========== FAQ ========== */}
             <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
                 <div style={{ maxWidth: 650, margin: '0 auto' }}>
                     <h2 style={{
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                        fontWeight: 800, color: '#0f172a',
-                        textAlign: 'center', marginBottom: 40
+                        fontSize: 32, fontWeight: 800, textAlign: 'center', marginBottom: 40
                     }}>
-                        Frequently asked questions
+                        <span style={{ color: '#0f172a' }}>Frequently Asked </span>
+                        <span style={{ color: '#2563eb' }}>Questions</span>
                     </h2>
 
                     <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
@@ -589,15 +675,14 @@ const PricingPage = () => {
                 </div>
             </section>
 
-            {/* BOTTOM CTA */}
+            {/* ========== BOTTOM CTA ========== */}
             <section style={{ padding: '80px 24px', background: '#0f172a', textAlign: 'center' }}>
                 <div style={{ maxWidth: 550, margin: '0 auto' }}>
                     <h2 style={{
-                        fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-                        fontWeight: 800, color: '#fff',
-                        marginBottom: 16, letterSpacing: '-0.01em'
+                        fontSize: 36, fontWeight: 800, marginBottom: 16, letterSpacing: '-0.01em'
                     }}>
-                        Ready to find your next deal?
+                        <span style={{ color: '#fff' }}>Ready to find your </span>
+                        <span style={{ color: '#3b82f6' }}>next deal?</span>
                     </h2>
                     <p style={{
                         fontSize: 16, color: 'rgba(255,255,255,0.6)',
