@@ -24,18 +24,6 @@ module.exports = (sequelize) => {
   });
 
   MotiveTypes.associate = (models) => {
-    MotiveTypes.hasMany(models.FilesUrls, {
-      foreignKey: 'motive_type_id',
-      as: 'filesUrls',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
-    MotiveTypes.hasMany(models.PagesUrls, {
-      foreignKey: 'motive_type_id',
-      as: 'pagesUrls',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
     MotiveTypes.hasMany(models.Property, {
       foreignKey: 'motive_type_id',
       as: 'properties',

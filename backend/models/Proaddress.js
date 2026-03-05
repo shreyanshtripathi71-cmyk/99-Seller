@@ -404,33 +404,15 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
-    Proaddress.belongsTo(models.Ownername, {
-      foreignKey: 'ownername_id',
-      as: 'ownername',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
     Proaddress.belongsTo(models.PropertyTrustDeed, {
       foreignKey: 'property_trust_deed_id',
       as: 'propertyTrustDeed',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
-    Proaddress.hasMany(models.FilesUrls, {
-      foreignKey: 'proaddress_id',
-      as: 'filesUrls',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
     Proaddress.hasMany(models.Property, {
       foreignKey: 'proaddress_id',
       as: 'properties',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
-    Proaddress.hasMany(models.ErroneousLinks, {
-      foreignKey: 'proaddress_id',
-      as: 'erroneousLinks',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });

@@ -174,12 +174,6 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
-    Property.belongsTo(models.FilesUrls, {
-      foreignKey: 'PFilesUrlsId',
-      as: 'filesUrl',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    });
     Property.hasMany(models.Auction, {
       foreignKey: 'APropertyID',
       as: 'auctions',
