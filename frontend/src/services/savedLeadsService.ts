@@ -1,5 +1,5 @@
 // Saved Leads Service - Backend Integration
-import { Lead } from "@/components/search/components/LeadTableView";
+import { Lead } from "@/modules/UserSearchData_Module";
 import axios from "axios";
 
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}/api/saved-properties`;

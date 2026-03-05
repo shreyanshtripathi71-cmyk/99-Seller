@@ -1,7 +1,7 @@
 "use client";
 
 import SubscriptionPage from "@/components/dashboard/SubscriptionPage";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ProtectedRoute } from "@/modules/CommonUI_Module";
 
 export default function Page() {
   return (

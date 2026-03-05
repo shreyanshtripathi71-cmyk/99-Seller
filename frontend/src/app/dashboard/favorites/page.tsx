@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import Link from "next/link";
-import DashboardLayout from "@/components/search/DashboardLayout";
+import { DashboardLayout } from "@/modules/UserSearchLayout_Module";
 import styles from "@/components/search/dashboard.module.scss";
 
 interface SavedLead {

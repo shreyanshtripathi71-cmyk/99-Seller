@@ -1,5 +1,5 @@
 import Link from "next/link"
-import DeleteModal from "@/modals/DeleteModal";
+import { DeleteModal } from "@/modules/UserSupport_Module";
 
 const Profile = () => {
    return (

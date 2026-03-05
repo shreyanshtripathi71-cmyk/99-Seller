@@ -1,11 +1,13 @@
 "use client";
+import { Header, Footer } from "@/modules/HomeUI_Module";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Header from "../../components/home/home-modern/components/Header";
-import Footer from "../../components/home/home-modern/components/Footer";
+
+
 import styles from "../../components/home/home-modern/styles/homepage.module.scss";
-import { useContent } from "@/hooks/useContent";
+import { useContent } from "@/modules/AppLogic_Module";
 import { useAuth } from "@/context/AuthContext";
 
 /* --- Default content (CMS fallback) --- */

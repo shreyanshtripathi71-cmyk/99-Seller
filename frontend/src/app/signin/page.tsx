@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/context/AuthContext";
 import styles from "@/styles/auth.module.scss";
-import ReCaptchaComponent, { ReCaptchaRef } from "@/components/ui/ReCaptcha";
+import { ReCaptchaComponent, ReCaptchaRef } from "@/modules/CommonUI_Module";
 
 interface LoginFormData {
   email: string;

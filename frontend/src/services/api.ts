@@ -63,6 +63,11 @@ const handleResponse = async <T>(response: Response): Promise<{ success: boolean
       }
       return { success: true, data: json, warnings: json.warnings };
     } else {
+      // Clear stale token on 401 Unauthorized
+      if (response.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('99sellers_token');
+        console.warn('[V8_API] 401 Unauthorized - Clearing stale token');
+      }
       return {
         success: false,
         error: json.error || json.message || `HTTP ${response.status}: ${response.statusText}`,
@@ -86,12 +91,12 @@ const handleResponse = async <T>(response: Response): Promise<{ success: boolean
 // ============================================
 export const authAPI = {
   login: async (email: string, password: string, captchaToken?: string) => {
-    const response = await fetchWithAuth('/api/login', {
+    const response = await fetchWithAuth('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password, captchaToken }),
+      body: JSON.stringify({ Email: email, Password: password, captchaToken }),
     });
 
-    const result = await handleResponse<{ token: string; userType: string }>(response);
+    const result = await handleResponse<{ token: string; user?: any; userType?: string }>(response);
 
     if (result.success && result.data?.token) {
       setToken(result.data.token);
@@ -101,16 +106,23 @@ export const authAPI = {
   },
 
   register: async (data: any) => {
-    const response = await fetchWithAuth('/api/register', {
+    const response = await fetchWithAuth('/auth/register', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        FirstName: data.firstName,
+        LastName: data.lastName,
+        Email: data.email,
+        Password: data.password,
+        Contact: data.contact,
+        token: data.captchaToken
+      }),
     });
 
     return handleResponse<{ message: string }>(response);
   },
 
   updateProfile: async (data: any) => {
-    const response = await fetchWithAuth('/api/update-profile', {
+    const response = await fetchWithAuth('/auth/update-profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -119,7 +131,7 @@ export const authAPI = {
   },
 
   changePassword: async (data: any) => {
-    const response = await fetchWithAuth('/api/change-password', {
+    const response = await fetchWithAuth('/auth/change-password', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -128,7 +140,7 @@ export const authAPI = {
   },
 
   forgotPassword: async (email: string) => {
-    const response = await fetchWithAuth('/api/forgot-password', {
+    const response = await fetchWithAuth('/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
@@ -137,7 +149,7 @@ export const authAPI = {
   },
 
   resetPassword: async (data: any) => {
-    const response = await fetchWithAuth('/api/reset-password', {
+    const response = await fetchWithAuth('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -172,24 +184,24 @@ export interface SubscriptionStatus {
 
 export const subscriptionAPI = {
   getStatus: async () => {
-    const response = await fetchWithAuth('/api/subscription/status');
+    const response = await fetchWithAuth('/subscription/status');
     return handleResponse<SubscriptionStatus>(response);
   },
 
   startTrial: async () => {
-    const response = await fetchWithAuth('/api/subscription/trial/start', {
+    const response = await fetchWithAuth('/subscription/trial/start', {
       method: 'POST',
     });
     return handleResponse<{ message: string }>(response);
   },
 
   getPlans: async () => {
-    const response = await fetchWithAuth('/api/subscription/plans');
+    const response = await fetchWithAuth('/subscription/plans');
     return handleResponse<any[]>(response);
   },
 
   create: async (planId: string, billingCycle: string) => {
-    const response = await fetchWithAuth('/api/subscription/create', {
+    const response = await fetchWithAuth('/subscription/create', {
       method: 'POST',
       body: JSON.stringify({ planId, billingCycle }),
     });
@@ -197,7 +209,7 @@ export const subscriptionAPI = {
   },
 
   cancel: async () => {
-    const response = await fetchWithAuth('/api/subscription/cancel', {
+    const response = await fetchWithAuth('/subscription/cancel', {
       method: 'POST',
     });
     return handleResponse<any>(response);
@@ -209,11 +221,11 @@ export const propertiesAPI = { getAll: async () => ({ success: true, data: [] })
 export const auctionsAPI = { getLive: async () => ({ success: true, data: [] }) };
 export const savedLeadsAPI = {
   getAll: async () => {
-    const response = await fetchWithAuth('/api/saved-properties');
+    const response = await fetchWithAuth('/saved-properties');
     return handleResponse<any[]>(response);
   },
   save: async (propertyId: number) => {
-    const response = await fetchWithAuth('/api/saved-properties', {
+    const response = await fetchWithAuth('/saved-properties', {
       method: 'POST',
       body: JSON.stringify({ propertyId }),
     });
@@ -228,14 +240,14 @@ export const savedLeadsAPI = {
 };
 export const savedSearchesAPI = {
   create: async (name: string, filters: any) => {
-    const response = await fetchWithAuth('/api/saved-searches', {
+    const response = await fetchWithAuth('/saved-searches', {
       method: 'POST',
       body: JSON.stringify({ name, filters }),
     });
     return handleResponse<any>(response);
   },
   getAll: async () => {
-    const response = await fetchWithAuth('/api/saved-searches');
+    const response = await fetchWithAuth('/saved-searches');
     return handleResponse<any[]>(response);
   },
   getById: async (id: string | number) => {
@@ -254,31 +266,31 @@ export const dashboardAPI = { getStats: async () => ({ success: true, data: {} }
 export const premiumAPI = { getOwnerLeads: async () => ({ success: true, data: [] }), getLoanLeads: async () => ({ success: true, data: [] }) };
 export const poppinsAPI = {
   getActive: async () => {
-    const response = await fetchWithAuth('/api/poppins/active');
+    const response = await fetchWithAuth('/poppins/active');
     return handleResponse<any[]>(response);
   }
 };
 export const adminAPI = {
   getStats: async () => {
-    const response = await fetchWithAuth('/api/admin/stats');
+    const response = await fetchWithAuth('/admin/stats');
     return handleResponse<any>(response);
   },
   getHistoricalStats: async () => {
-    const response = await fetchWithAuth('/api/admin/historical-stats');
+    const response = await fetchWithAuth('/admin/historical-stats');
     return handleResponse<any>(response);
   },
   users: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/stats');
+      const response = await fetchWithAuth('/admin/stats');
       const result = await handleResponse<any>(response);
       return result.success ? { success: true, data: result.data.users } : result;
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/users');
+      const response = await fetchWithAuth('/admin/users');
       return handleResponse<any[]>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/users', {
+      const response = await fetchWithAuth('/admin/users', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -298,7 +310,7 @@ export const adminAPI = {
       return handleResponse<any>(response);
     },
     uploadCSV: async (users: any[]) => {
-      const response = await fetchWithAuth('/api/admin/users/upload', {
+      const response = await fetchWithAuth('/admin/users/upload', {
         method: 'POST',
         body: JSON.stringify({ users }),
       });
@@ -307,15 +319,15 @@ export const adminAPI = {
   },
   owners: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/owners/stats');
+      const response = await fetchWithAuth('/admin/owners/stats');
       return handleResponse<any>(response);
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/owners');
+      const response = await fetchWithAuth('/admin/owners');
       return handleResponse<{ owners: any[] }>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/owners', {
+      const response = await fetchWithAuth('/admin/owners', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -337,15 +349,15 @@ export const adminAPI = {
   },
   loans: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/loans/stats');
+      const response = await fetchWithAuth('/admin/loans/stats');
       return handleResponse<any>(response);
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/loans');
+      const response = await fetchWithAuth('/admin/loans');
       return handleResponse<{ loans: any[] }>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/loans', {
+      const response = await fetchWithAuth('/admin/loans', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -367,20 +379,20 @@ export const adminAPI = {
   },
   subscriptions: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/stats');
+      const response = await fetchWithAuth('/admin/stats');
       const result = await handleResponse<any>(response);
       return result.success ? { success: true, data: result.data.subscriptions } : result;
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/subscriptions');
+      const response = await fetchWithAuth('/admin/subscriptions');
       return handleResponse<any[]>(response);
     },
     getPlans: async () => {
-      const response = await fetchWithAuth('/api/admin/subscriptions/plans');
+      const response = await fetchWithAuth('/admin/subscriptions/plans');
       return handleResponse<any[]>(response);
     },
     createOrUpdatePlan: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/subscriptions/plans', {
+      const response = await fetchWithAuth('/admin/subscriptions/plans', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -401,12 +413,12 @@ export const adminAPI = {
   },
   properties: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/stats');
+      const response = await fetchWithAuth('/admin/stats');
       const result = await handleResponse<any>(response);
       return result.success ? { success: true, data: result.data.properties } : result;
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/properties');
+      const response = await fetchWithAuth('/admin/properties');
       return handleResponse<any[]>(response);
     },
     getById: async (id: string | number) => {
@@ -427,7 +439,7 @@ export const adminAPI = {
       return handleResponse<any>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/properties', {
+      const response = await fetchWithAuth('/admin/properties', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -441,7 +453,7 @@ export const adminAPI = {
       const headers: HeadersInit = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const url = `${API_BASE_URL}/api/admin/properties/${id}/image`;
+      const url = `${API_BASE_URL}/admin/properties/${id}/image`;
       console.log('[DEBUG] Uploading image to:', url);
 
       const response = await fetch(url, {
@@ -460,16 +472,16 @@ export const adminAPI = {
   },
   auctions: {
     getStats: async () => {
-      const response = await fetchWithAuth('/api/admin/stats');
+      const response = await fetchWithAuth('/admin/stats');
       const result = await handleResponse<any>(response);
       return result.success ? { success: true, data: result.data.auctions } : result;
     },
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/auctions');
+      const response = await fetchWithAuth('/admin/auctions');
       return handleResponse<any[]>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/auctions', {
+      const response = await fetchWithAuth('/admin/auctions', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -491,21 +503,21 @@ export const adminAPI = {
   },
   crawler: {
     getRuns: async () => {
-      const response = await fetchWithAuth('/api/admin/crawler/runs');
+      const response = await fetchWithAuth('/admin/crawler/runs');
       return handleResponse<any[]>(response);
     },
     getErrors: async () => {
-      const response = await fetchWithAuth('/api/admin/crawler/errors');
+      const response = await fetchWithAuth('/admin/crawler/errors');
       return handleResponse<any[]>(response);
     }
   },
   poppins: {
     getAll: async () => {
-      const response = await fetchWithAuth('/api/admin/poppins');
+      const response = await fetchWithAuth('/admin/poppins');
       return handleResponse<any[]>(response);
     },
     create: async (data: any) => {
-      const response = await fetchWithAuth('/api/admin/poppins', {
+      const response = await fetchWithAuth('/admin/poppins', {
         method: 'POST',
         body: JSON.stringify(data),
       });
@@ -527,13 +539,13 @@ export const adminAPI = {
   },
   activities: {
     getRecent: async () => {
-      const response = await fetchWithAuth('/api/admin/activities');
+      const response = await fetchWithAuth('/admin/activities');
       return handleResponse<any[]>(response);
     }
   },
   content: {
     list: async () => {
-      const response = await fetchWithAuth('/api/admin/content');
+      const response = await fetchWithAuth('/admin/content');
       return handleResponse<any[]>(response);
     },
     get: async (key: string) => {
@@ -558,7 +570,7 @@ export const adminAPI = {
       const headers: HeadersInit = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(`${API_BASE_URL}/api/admin/content/upload`, {
+      const response = await fetch(`${API_BASE_URL}/admin/content/upload`, {
         method: 'POST',
         headers,
         body: formData,
@@ -574,18 +586,18 @@ export const adminAPI = {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/admin/import`, {
+      const response = await fetch(`${API_BASE_URL}/admin/import`, {
         method: 'POST',
         headers,
         body: formData,
       });
       return handleResponse<any>(response);
     },
-    getTemplateUrl: (target: string) => `${API_BASE_URL}/api/admin/import/template/${target}`
+    getTemplateUrl: (target: string) => `${API_BASE_URL}/admin/import/template/${target}`
   },
   billing: {
     getAllInvoices: async () => {
-      const response = await fetchWithAuth('/api/billing/admin/invoices');
+      const response = await fetchWithAuth('/billing/admin/invoices');
       return handleResponse<any[]>(response);
     }
   }
@@ -593,14 +605,14 @@ export const adminAPI = {
 
 export const feedbackAPI = {
   submit: async (data: any) => {
-    const response = await fetchWithAuth('/api/feedback/submit', {
+    const response = await fetchWithAuth('/feedback/submit', {
       method: 'POST',
       body: JSON.stringify(data),
     });
     return handleResponse<any>(response);
   },
   getAll: async () => {
-    const response = await fetchWithAuth('/api/feedback/all');
+    const response = await fetchWithAuth('/feedback/all');
     return handleResponse<any[]>(response);
   },
   updateStatus: async (id: number | string, status: string) => {
@@ -617,26 +629,26 @@ export const feedbackAPI = {
 // ============================================
 export const billingAPI = {
   getOverview: async () => {
-    const response = await fetchWithAuth('/api/billing/overview');
+    const response = await fetchWithAuth('/billing/overview');
     return handleResponse<any>(response);
   },
   getInvoices: async () => {
-    const response = await fetchWithAuth('/api/billing/invoices');
+    const response = await fetchWithAuth('/billing/invoices');
     return handleResponse<any[]>(response);
   },
   getPaymentMethods: async () => {
-    const response = await fetchWithAuth('/api/billing/payment-methods');
+    const response = await fetchWithAuth('/billing/payment-methods');
     return handleResponse<any[]>(response);
   },
   addPaymentMethod: async (data: any) => {
-    const response = await fetchWithAuth('/api/billing/payment-methods', {
+    const response = await fetchWithAuth('/billing/payment-methods', {
       method: 'POST',
       body: JSON.stringify(data),
     });
     return handleResponse<any>(response);
   },
   updateBillingAddress: async (data: any) => {
-    const response = await fetchWithAuth('/api/billing/address', {
+    const response = await fetchWithAuth('/billing/address', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -646,7 +658,7 @@ export const billingAPI = {
 
 export const paymentAPI = {
   createPaymentIntent: async (planId: string, billingCycle: string) => {
-    const response = await fetchWithAuth('/api/payment/create-payment-intent', {
+    const response = await fetchWithAuth('/payment/create-payment-intent', {
       method: 'POST',
       body: JSON.stringify({ planId, billingCycle }),
     });
@@ -659,18 +671,18 @@ export const paymentAPI = {
 // ============================================
 export const exportAPI = {
   exportSavedLeads: async (format: 'csv' | 'json' | 'excel', type: 'saved' | 'search' = 'saved', filters: any = {}) => {
-    const response = await fetchWithAuth('/api/export/saved-leads', {
+    const response = await fetchWithAuth('/export/saved-leads', {
       method: 'POST',
       body: JSON.stringify({ format, type, filters }),
     });
     return handleResponse<{ content: string; filename: string; mimeType: string; recordCount: number }>(response);
   },
   getHistory: async () => {
-    const response = await fetchWithAuth('/api/export/history');
+    const response = await fetchWithAuth('/export/history');
     return handleResponse<any[]>(response);
   },
   getUsage: async () => {
-    const response = await fetchWithAuth('/api/export/usage');
+    const response = await fetchWithAuth('/export/usage');
     return handleResponse<{
       usage: number;
       limit: number;

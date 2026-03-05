@@ -1,10 +1,12 @@
 "use client";
+import { Header, Footer, FeatureSection } from "@/modules/HomeUI_Module";
+
 
 import React, { useState, useEffect } from "react";
-import Header from "@/components/home/home-modern/components/Header";
-import Footer from "@/components/home/home-modern/components/Footer";
-import FeatureSection from "@/components/home/home-modern/components/FeatureSection";
-import { useContent } from "@/hooks/useContent";
+
+
+
+import { useContent } from "@/modules/AppLogic_Module";
 
 const defaultContent = {
     hero: {

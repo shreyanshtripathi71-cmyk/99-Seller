@@ -139,9 +139,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         const user: User = {
           id: tokenPayload.id.toString(),
-          email: email,
-          name: email.split("@")[0],
-          userType: data.userType,
+          email: data.user?.Email || email,
+          name: data.user?.FirstName || email.split("@")[0],
+          firstName: data.user?.FirstName,
+          lastName: data.user?.LastName,
+          userType: data.user?.UserType || data.userType,
           createdAt: new Date().toISOString(),
         };
 
@@ -159,15 +161,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
         localStorage.setItem(STORAGE_KEYS.SUBSCRIPTION, JSON.stringify(subscription));
 
+        const isAdminUser = (data.user?.UserType || data.userType)?.toLowerCase() === "admin";
+
         setState({
           user,
           subscription,
           isAuthenticated: true,
           isLoading: false,
-          isAdmin: data.userType?.toLowerCase() === "admin",
+          isAdmin: isAdminUser,
         });
 
-        return { success: true, message: "Login successful", userType: data.userType };
+        return { success: true, message: "Login successful", userType: data.user?.UserType || data.userType };
       }
       return { success: false, message: result.error || "Invalid credentials" };
     } catch (error: any) {

@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
-import { animationCreate } from "@/utils/utils";
+import { animationCreate } from "@/modules/AppLogic_Module";
 import { AuthProvider } from "@/context/AuthContext";
-import SocialProofToast from "@/components/ui/SocialProofToast";
-import FloatingFeedbackButton from "@/components/ui/FloatingFeedbackButton";
+import { SocialProofToast } from "@/modules/CommonUI_Module";
+import { FloatingFeedbackButton } from "@/modules/CommonUI_Module";
 
 if (typeof window !== "undefined") {
     require("bootstrap/dist/js/bootstrap");

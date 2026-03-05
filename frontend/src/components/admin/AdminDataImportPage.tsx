@@ -301,7 +301,12 @@ const AdminDataImportPage: React.FC = () => {
                                         <StatBox label="Owners" value={result.stats.owners} icon="fa-users" color="#8b5cf6" />
                                         <StatBox label="Auctions" value={result.stats.auctions} icon="fa-gavel" color="#f59e0b" />
                                         <StatBox label="Loans" value={result.stats.loans} icon="fa-hand-holding-dollar" color="#10b981" />
-                                        <StatBox label="Errors" value={result.stats.errors} icon="fa-triangle-exclamation" color="#ef4444" />
+                                        <StatBox label="Probates" value={result.stats.probates} icon="fa-balance-scale" color="#6366f1" />
+                                        <StatBox label="Violations" value={result.stats.violations} icon="fa-triangle-exclamation" color="#dc2626" />
+                                        <StatBox label="Evictions" value={result.stats.evictions} icon="fa-door-open" color="#ea580c" />
+                                        <StatBox label="Divorces" value={result.stats.divorces} icon="fa-heart-broken" color="#ec4899" />
+                                        <StatBox label="Tax Liens" value={result.stats.taxLiens} icon="fa-file-invoice-dollar" color="#10b981" />
+                                        <StatBox label="Errors" value={result.stats.errors} icon="fa-circle-xmark" color="#ef4444" />
                                     </div>
                                 </div>
                             )}

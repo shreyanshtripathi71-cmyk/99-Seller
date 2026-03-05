@@ -1,16 +1,10 @@
 "use client";
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import Header from "./components/Header";
-import HeroSlider from "./components/HeroSlider";
-import FeatureSection from "./components/FeatureSection";
+import { Header, HeroSlider, FeatureSection, TestimonialsSection, FAQSection, FinalCTA, Footer } from "@/modules/HomeUI_Module";
 import DashboardAnimation from "./components/DashboardAnimation";
-import TestimonialsSection from "./components/TestimonialsSection";
-import FAQSection from "./components/FAQSection";
-import FinalCTA from "./components/FinalCTA";
-import Footer from "./components/Footer";
 import styles from "./styles/homepage.module.scss";
-import { useContent } from "@/hooks/useContent";
+import { useContent } from "@/modules/AppLogic_Module";
 
 interface Section {
   title?: string;

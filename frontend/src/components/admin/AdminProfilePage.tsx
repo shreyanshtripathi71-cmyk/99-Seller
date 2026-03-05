@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { authAPI } from "@/services/api";
-import ChangePasswordModal from "@/modals/ChangePasswordModal";
+import { ChangePasswordModal } from "@/modules/UserSupport_Module";
 
 const AdminProfilePage: React.FC = () => {
     const { user } = useAuth();
