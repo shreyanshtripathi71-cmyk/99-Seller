@@ -9,10 +9,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup-db": "mysql -u root -p < migrations/database_schema.sql",
-    "cleanup-db": "node utils/database/cleanup-database.js",
-    "seed-db": "node utils/seed/seed-properties.js",
-    "migrate-to-railway": "node utils/migration/migrate_data_to_railway.js",
-    "check-db": "node utils/database/check_indexes.js"
+    "seed-db": "node utils/seed/seed-properties.js"
   },
   "keywords": [],
   "author": "",
