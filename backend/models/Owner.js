@@ -62,7 +62,7 @@ module.exports = (sequelize) => {
     },
     email: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     }
   }, {
     tableName: 'owner',

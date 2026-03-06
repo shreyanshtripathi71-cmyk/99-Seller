@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import DashboardShell from "@/components/search/DashboardShell";
+import { DashboardShell } from "@/modules/UserSearchLayout_Module";
 import styles from "@/components/search/styles/dashboard.module.scss";
 import { useAuth } from "@/context/AuthContext";
-import AddPaymentMethodModal from "@/components/dashboard/AddPaymentMethodModal";
-import UpdateBillingAddressModal from "@/components/dashboard/UpdateBillingAddressModal";
-import StripePaymentForm from "@/components/dashboard/StripePaymentForm";
+import { AddPaymentMethodModal } from "@/modules/UserBilling_Module";
+import { UpdateBillingAddressModal } from "@/modules/UserBilling_Module";
+import { StripePaymentForm } from "@/modules/UserBilling_Module";
 import { paymentAPI, subscriptionAPI, billingAPI } from "@/services/api";
 import { useRouter, useSearchParams } from "next/navigation";
 

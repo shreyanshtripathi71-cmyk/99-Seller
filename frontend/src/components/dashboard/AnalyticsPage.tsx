@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import DashboardShell from "@/components/search/DashboardShell";
+import { DashboardShell } from "@/modules/UserSearchLayout_Module";
 import styles from "@/components/search/styles/dashboard.module.scss";
 
 // Mock analytics data

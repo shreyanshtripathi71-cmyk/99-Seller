@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import DashboardShell from "@/components/search/DashboardShell";
+import { DashboardShell } from "@/modules/UserSearchLayout_Module";
 import { useAuth } from "@/context/AuthContext";
 import styles from "@/components/search/styles/dashboard.module.scss";
 import {

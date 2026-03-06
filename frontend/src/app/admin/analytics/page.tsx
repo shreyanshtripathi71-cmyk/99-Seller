@@ -221,7 +221,7 @@ const AdminAnalyticsPage = () => {
       </div>
 
       {/* Charts Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24, marginBottom: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))", gap: 24, marginBottom: 24 }}>
 
         {/* Revenue Chart */}
         <div style={{ ...cardStyle, minHeight: 350, display: "flex", flexDirection: "column" }}>
@@ -301,7 +301,7 @@ const AdminAnalyticsPage = () => {
       </div>
 
       {/* Platform Dynamics - Compact Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24 }}>
         <MetricBox label="Conversion Rate" value={`${subscriptionStats?.conversionRate?.toFixed(1) || 0}%`} sub="Paid / Total" />
         <MetricBox label="Avg. Revenue" value={`$${((subscriptionStats?.monthlyRevenue || 0) / (subscriptionStats?.activeSubscriptions || 1)).toFixed(0)}`} sub="Per Subscriber" />
         <MetricBox label="Active Trials" value={subscriptionStats?.trialingSubscriptions || 0} sub="Potential Leads" />

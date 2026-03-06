@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ProtectedRoute } from "@/modules/CommonUI_Module";
 
 interface SearchLayoutProps {
   children: React.ReactNode;

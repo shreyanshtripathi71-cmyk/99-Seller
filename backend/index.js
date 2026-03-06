@@ -48,26 +48,32 @@ const server = app.listen(PORT, '0.0.0.0', async () => {
     await sequelize.authenticate();
     console.log('[DB] Connected.');
 
-    // Load Routes Lazy
-    app.use('/api', require('./routes/auth'));
-    app.use('/api/properties', require('./routes/properties'));
-    app.use('/api/users', require('./routes/users'));
-    app.use('/api/admin', require('./routes/admin'));
-    app.use('/api/content', require('./routes/content'));
-    app.use('/api/billing', require('./routes/billing'));
-    app.use('/api/subscription', require('./routes/subscription'));
-    app.use('/api/payment', require('./routes/paymentRoutes'));
-    app.use('/api/feedback', require('./routes/feedback'));
-    app.use('/api/saved-searches', require('./routes/savedSearches'));
-    app.use('/api/saved-properties', require('./routes/savedProperties'));
-    app.use('/api/export', require('./routes/export'));
+    // Debug endpoint - raw SQL counts (place BEFORE routes to avoid auth)
+    app.get('/api/debug-counts', async (req, res) => {
+      try {
+        const [props] = await sequelize.query('SELECT COUNT(*) as c FROM property');
+        const [proaddr] = await sequelize.query('SELECT COUNT(*) as c FROM proaddress');
+        const [users] = await sequelize.query('SELECT COUNT(*) as c FROM user_login');
+        const [motives] = await sequelize.query('SELECT COUNT(*) as c FROM motive_types');
+        const [loans] = await sequelize.query('SELECT COUNT(*) as c FROM loan');
+        const [owners] = await sequelize.query('SELECT COUNT(*) as c FROM owner');
+        res.json({
+          property: props[0].c, proaddress: proaddr[0].c, user_login: users[0].c,
+          motive_types: motives[0].c, loan: loans[0].c, owner: owners[0].c
+        });
+      } catch (e) { res.json({ error: e.message }); }
+    });
+
+    // Load Consolidated Routes
+    app.use('/api/admin', require('./routes/AdminCore_Routes'));
+    app.use('/api', require('./routes/UserCore_Routes'));
 
     app.get('/api/test', (req, res) => res.json({ success: true, status: 'READY' }));
 
     // Sync & Seed in background
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('[DB] Models Synced.');
-    const { seedData } = require('./services/seedService');
+    const { seedData } = require('./services/AppServices_Module');
     await seedData();
     console.log('[DB] Seeding Finished. SYSTEM READY.');
 

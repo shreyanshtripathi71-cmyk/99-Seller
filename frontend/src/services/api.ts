@@ -63,6 +63,11 @@ const handleResponse = async <T>(response: Response): Promise<{ success: boolean
       }
       return { success: true, data: json, warnings: json.warnings };
     } else {
+      // Clear stale token on 401 Unauthorized
+      if (response.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('99sellers_token');
+        console.warn('[V8_API] 401 Unauthorized - Clearing stale token');
+      }
       return {
         success: false,
         error: json.error || json.message || `HTTP ${response.status}: ${response.statusText}`,
@@ -86,12 +91,12 @@ const handleResponse = async <T>(response: Response): Promise<{ success: boolean
 // ============================================
 export const authAPI = {
   login: async (email: string, password: string, captchaToken?: string) => {
-    const response = await fetchWithAuth('/api/login', {
+    const response = await fetchWithAuth('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password, captchaToken }),
+      body: JSON.stringify({ Email: email, Password: password, captchaToken }),
     });
 
-    const result = await handleResponse<{ token: string; userType: string }>(response);
+    const result = await handleResponse<{ token: string; user?: any; userType?: string }>(response);
 
     if (result.success && result.data?.token) {
       setToken(result.data.token);
@@ -101,16 +106,23 @@ export const authAPI = {
   },
 
   register: async (data: any) => {
-    const response = await fetchWithAuth('/api/register', {
+    const response = await fetchWithAuth('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        FirstName: data.firstName,
+        LastName: data.lastName,
+        Email: data.email,
+        Password: data.password,
+        Contact: data.contact,
+        token: data.captchaToken
+      }),
     });
 
     return handleResponse<{ message: string }>(response);
   },
 
   updateProfile: async (data: any) => {
-    const response = await fetchWithAuth('/api/update-profile', {
+    const response = await fetchWithAuth('/api/auth/update-profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -119,7 +131,7 @@ export const authAPI = {
   },
 
   changePassword: async (data: any) => {
-    const response = await fetchWithAuth('/api/change-password', {
+    const response = await fetchWithAuth('/api/auth/change-password', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -128,7 +140,7 @@ export const authAPI = {
   },
 
   forgotPassword: async (email: string) => {
-    const response = await fetchWithAuth('/api/forgot-password', {
+    const response = await fetchWithAuth('/api/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
@@ -137,7 +149,7 @@ export const authAPI = {
   },
 
   resetPassword: async (data: any) => {
-    const response = await fetchWithAuth('/api/reset-password', {
+    const response = await fetchWithAuth('/api/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -585,7 +597,7 @@ export const adminAPI = {
   },
   billing: {
     getAllInvoices: async () => {
-      const response = await fetchWithAuth('/api/billing/admin/invoices');
+      const response = await fetchWithAuth('/api/admin/billing/invoices');
       return handleResponse<any[]>(response);
     }
   }
@@ -600,7 +612,7 @@ export const feedbackAPI = {
     return handleResponse<any>(response);
   },
   getAll: async () => {
-    const response = await fetchWithAuth('/api/feedback/all');
+    const response = await fetchWithAuth('/api/admin/feedback/all');
     return handleResponse<any[]>(response);
   },
   updateStatus: async (id: number | string, status: string) => {
@@ -646,7 +658,7 @@ export const billingAPI = {
 
 export const paymentAPI = {
   createPaymentIntent: async (planId: string, billingCycle: string) => {
-    const response = await fetchWithAuth('/api/payment/create-payment-intent', {
+    const response = await fetchWithAuth('/api/payments/create-intent', {
       method: 'POST',
       body: JSON.stringify({ planId, billingCycle }),
     });

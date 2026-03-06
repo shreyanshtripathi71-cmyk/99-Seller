@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import DashboardShell from "@/components/search/DashboardShell";
+import { DashboardShell } from "@/modules/UserSearchLayout_Module";
 import { useAuth } from "@/context/AuthContext";
 import { savedLeadsAPI, exportAPI } from "@/services/api";
 

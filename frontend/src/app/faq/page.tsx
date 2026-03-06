@@ -1,9 +1,11 @@
 "use client";
+import { Header, Footer } from "@/modules/HomeUI_Module";
+
 
 import React, { useState } from "react";
-import Header from "@/components/home/home-modern/components/Header";
-import Footer from "@/components/home/home-modern/components/Footer";
-import { useContent } from "@/hooks/useContent";
+
+
+import { useContent } from "@/modules/AppLogic_Module";
 
 const defaultContent = {
   title: "Frequently Asked Questions",

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ReactPaginate from "react-paginate";
-import useLeadPagination from "@/hooks/useLeadPagination";
+import { useLeadPagination } from "@/modules/AppLogic_Module";
 import DashboardHeaderTwo from "@/layouts/headers/dashboard/DashboardHeaderTwo";
 
 // FIX: Added 'zip', 'state', 'county', 'auction_date' to match the 'Lead' interface logic

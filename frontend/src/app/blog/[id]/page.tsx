@@ -1,8 +1,10 @@
 "use client";
+import { Header, Footer } from "@/modules/HomeUI_Module";
+
 
 import React, { useState, useEffect } from "react";
-import Header from "@/components/home/home-modern/components/Header";
-import Footer from "@/components/home/home-modern/components/Footer";
+
+
 import { adminAPI } from "@/services/api";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";

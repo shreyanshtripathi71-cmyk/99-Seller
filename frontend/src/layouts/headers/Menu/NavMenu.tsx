@@ -1,5 +1,5 @@
 "use client";
-import menu_data from "@/data/home-data/MenuData";
+import { menu_data } from "@/modules/UserSupport_Module";
 import Link from "next/link.js";
 import { usePathname } from "next/navigation";
 import Image from "next/image";

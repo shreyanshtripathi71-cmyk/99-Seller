@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import DashboardShell from "@/components/search/DashboardShell";
+import { DashboardShell } from "@/modules/UserSearchLayout_Module";
 import styles from "@/components/search/styles/dashboard.module.scss";
 import { useAuth } from "@/context/AuthContext";
-import ChangePasswordModal from "@/modals/ChangePasswordModal";
+import { ChangePasswordModal } from "@/modules/UserSupport_Module";
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();

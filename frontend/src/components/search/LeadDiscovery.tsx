@@ -2,12 +2,11 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import FilterPanel, { type Filters } from "./components/FilterPanel";
-import LeadTableView, { type Lead } from "./components/LeadTableView";
-import LeadGridView from "./components/LeadGridView";
-import SaveSearchModal from "@/modals/SaveSearchModal";
+import { Sidebar, Header } from "@/modules/UserSearchLayout_Module";
+import { FilterPanel, type Filters } from "@/modules/UserSearchData_Module";
+import { LeadTableView, type Lead } from "@/modules/UserSearchData_Module";
+import { LeadGridView } from "@/modules/UserSearchData_Module";
+import { SaveSearchModal } from "@/modules/UserSupport_Module";
 import { toggleSavedLead, getSavedLeads } from "@/services/savedLeadsService";
 import { savedSearchesAPI, authAPI } from "@/services/api";
 import styles from "./styles/dashboard.module.scss";
