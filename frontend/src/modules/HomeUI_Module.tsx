@@ -80,7 +80,7 @@ export const HeroSlider = () => {
     useEffect(() => {
         const loadSlides = async () => {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+                const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').trim();
                 const response = await fetch(`${apiUrl}/api/content/hero_images`);
                 if (response.ok) {
                     const result = await response.json();

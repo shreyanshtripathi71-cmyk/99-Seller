@@ -34,7 +34,7 @@ const CONTENT_PAGES = [
 
 // --- Drag & Drop Components ---
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').trim();
 
 interface DragDropUploaderProps {
     value: string;
@@ -293,11 +293,13 @@ const AdminContentPage: React.FC = () => {
                 // Rich defaults for each page type
                 const defaults: Record<string, any> = {
                     hero_images: [
-                        { id: 1, url: '/images/hero1.jpg', title: '99Sellers', subtitle: 'The Off-Market Deal Terminal', order: 1 }
+                        { id: 1, url: '/images/home/hero-slide-1.jpg', title: 'Find 100s of motivated sellers at few clicks', subtitle: 'Never let the lack of information stops you from closing deals', order: 1 },
+                        { id: 2, url: '/images/home/hero-slide-2.jpg', title: 'Want basket full of sales lead today?', subtitle: 'Hundreds and thousands of distressed sellers are just waiting for you to sell their home.', order: 2 },
+                        { id: 3, url: '/images/home/hero-slide-3.jpg', title: 'Sellers are waiting to sell their property.', subtitle: "Finding the right seller doesn't have to be hard. We make it easy for you.", order: 3 },
                     ],
                     page_home: {
                         hero: { title: '99Sellers', highlight: 'Deal Terminal', subtitle: 'Find foreclosures, divorce filings, and tax liens before they hit the MLS.', backgroundImage: '/images/hero-bg.jpg' },
-                        stats: { leads: '50,000+', states: '50', motives: '9+' },
+                        stats: { leads: '50,000+', states: '50', motives: '9+', backgroundImage: '/images/stats-bg.jpg' },
                         features: [
                             { title: 'Lead Discovery', description: 'Search distressed properties across all 50 states', image: '/images/features/discovery.jpg' },
                             { title: 'Skip Tracing', description: 'Get owner contact info including phone and email', image: '/images/features/skip-tracing.jpg' },
@@ -309,47 +311,59 @@ const AdminContentPage: React.FC = () => {
                         cta: { title: 'Start Finding Off-Market Deals Today', buttonText: 'Get Started Free', backgroundImage: '/images/cta-bg.jpg' }
                     },
                     page_about: {
-                        hero: { title: 'About', highlight: 'Us', subtitle: 'Empowering Real Estate Professionals to Find Motivated Sellers' },
+                        hero: { title: 'About', highlight: 'Us', subtitle: 'Empowering Real Estate Professionals to Find Motivated Sellers', backgroundImage: '/images/about-hero-bg.jpg' },
+                        teamImage: '/images/about/team.jpg',
                         sections: [
-                            { id: 'challenge', title: 'The Challenge Every Agent Faces', content: 'Finding motivated sellers is the hardest part of real estate investing.' }
+                            { id: 'challenge', title: 'The Challenge Every Agent Faces', content: 'Finding motivated sellers is the hardest part of real estate investing.', image: '/images/about/challenge.jpg' }
                         ],
                         distressedItems: ['Pre-Foreclosure', 'Probate', 'Divorce', 'Tax Delinquencies', 'Code Violations'],
-                        cta: { text: 'Ready to Transform Your Lead Generation?', buttonText: 'Get Started Free' }
+                        cta: { text: 'Ready to Transform Your Lead Generation?', buttonText: 'Get Started Free', backgroundImage: '/images/about/cta-bg.jpg' }
+                    },
+                    page_about_us_01: {
+                        hero: { title: 'About Us', subtitle: 'Our Mission', backgroundImage: '/images/about-alt-hero.jpg' },
+                        storyImage: '/images/about/story.jpg',
+                        sections: [
+                            { title: 'Our Story', content: 'We started with a simple mission...', image: '/images/about/story-section.jpg' }
+                        ]
                     },
                     page_faq: {
-                        title: 'Frequently Asked Questions', subtitle: 'Everything you need to know',
+                        title: 'Frequently Asked Questions', subtitle: 'Everything you need to know', headerImage: '/images/faq-header.jpg',
                         faqs: [
                             { question: 'What is 99Sellers?', answer: 'A real estate lead generation platform for off-market properties.' },
                             { question: 'How does the free trial work?', answer: 'Sign up for a free 15-day trial. No credit card required.' }
                         ]
                     },
                     page_pricing: {
-                        pricingHeader: { title: 'Our', titleHighlight: 'Pricing', subtitle: 'Choose the plan that fits your business.' },
+                        pricingHeader: { title: 'Our', titleHighlight: 'Pricing', subtitle: 'Choose the plan that fits your business.', backgroundImage: '/images/pricing-header-bg.jpg' },
                         plans: [
-                            { id: 'starter', name: 'Free', price: '0', period: 'forever', description: 'Get started', features: [], buttonText: 'Get Started Free', popular: false },
-                            { id: 'monthly', name: 'Pro Monthly', price: '50', period: 'month', description: 'Full access', features: [], buttonText: 'Start Pro', popular: true }
+                            { id: 'starter', name: 'Free', price: '0', period: 'forever', description: 'Get started', features: ['Basic lead search', 'Limited results'], buttonText: 'Get Started Free', popular: false, iconImage: '/images/pricing/free-icon.png' },
+                            { id: 'monthly', name: 'Pro Monthly', price: '50', period: 'month', description: 'Full access', features: ['Unlimited lead search', 'Skip tracing', 'Export data'], buttonText: 'Start Pro', popular: true, iconImage: '/images/pricing/pro-icon.png' }
                         ],
-                        guarantee: { title: '30-day money-back guarantee', description: 'Try any paid plan risk-free.' }
+                        guarantee: { title: '30-day money-back guarantee', description: 'Try any paid plan risk-free.', badgeImage: '/images/pricing/guarantee-badge.png' },
+                        comparisonImage: '/images/pricing/comparison.jpg'
                     },
                     page_features: {
-                        hero: { title: 'Powerful Features for Modern Investors', subtitle: 'Everything you need to find, track, and close off-market deals.' },
+                        hero: { title: 'Powerful Features for Modern Investors', subtitle: 'Everything you need to find, track, and close off-market deals.', backgroundImage: '/images/features-hero-bg.jpg' },
                         features: [
                             { image: '/images/features/discovery.jpg', title: 'Advanced Lead Discovery', layout: 'left', description: 'Search properties across all 50 states.' },
-                            { image: '/images/features/skip-tracing.jpg', title: 'Skip Tracing', layout: 'right', description: 'Get owner contact information.' }
+                            { image: '/images/features/skip-tracing.jpg', title: 'Skip Tracing', layout: 'right', description: 'Get owner contact information.' },
+                            { image: '/images/features/analytics.jpg', title: 'Market Analytics', layout: 'left', description: 'Understand market trends and property values.' },
+                            { image: '/images/features/export.jpg', title: 'Data Export', layout: 'right', description: 'Export leads to CSV, Excel, or your CRM.' }
                         ]
                     },
                     page_contact: {
-                        hero: { title: 'Contact', highlight: 'Us', subtitle: 'Get in touch with our team' },
+                        hero: { title: 'Contact', highlight: 'Us', subtitle: 'Get in touch with our team', backgroundImage: '/images/contact-hero-bg.jpg' },
                         contactInfo: { email: 'support@99sellers.com', phone: '(555) 123-4567' },
+                        mapImage: '/images/contact/map.jpg',
                         sections: [
-                            { id: 'support', title: 'Customer Support', content: 'Our team is here to help.' }
+                            { id: 'support', title: 'Customer Support', content: 'Our team is here to help.', image: '/images/contact/support.jpg' }
                         ]
                     },
-                    page_privacy: { title: 'Privacy Policy', lastUpdated: 'January 1, 2025', content: 'Your privacy is important to us.' },
-                    page_terms: { title: 'Terms of Service', lastUpdated: 'January 1, 2025', content: 'By using 99Sellers, you agree to these terms.' },
-                    page_help: { title: 'Help Center', subtitle: 'How can we help you?', categories: [{ title: 'Getting Started', icon: 'rocket', articles: [] }] },
-                    page_affiliates: { hero: { title: 'Affiliate Program', subtitle: 'Earn commission by referring users' }, benefits: [{ title: 'High Commission', description: '30% recurring' }] },
-                    page_blog: { title: 'Blog', subtitle: 'Real estate insights and tips', featuredImage: '/images/blog/featured.jpg' }
+                    page_privacy: { title: 'Privacy Policy', lastUpdated: 'January 1, 2025', content: 'Your privacy is important to us.', headerImage: '/images/privacy-header.jpg' },
+                    page_terms: { title: 'Terms of Service', lastUpdated: 'January 1, 2025', content: 'By using 99Sellers, you agree to these terms.', headerImage: '/images/terms-header.jpg' },
+                    page_help: { title: 'Help Center', subtitle: 'How can we help you?', headerImage: '/images/help-header.jpg', categories: [{ title: 'Getting Started', icon: 'rocket', image: '/images/help/getting-started.jpg', articles: [] }] },
+                    page_affiliates: { hero: { title: 'Affiliate Program', subtitle: 'Earn commission by referring users', backgroundImage: '/images/affiliates-hero-bg.jpg' }, bannerImage: '/images/affiliates/banner.jpg', benefits: [{ title: 'High Commission', description: '30% recurring', iconImage: '/images/affiliates/commission-icon.png' }] },
+                    page_blog: { title: 'Blog', subtitle: 'Real estate insights and tips', featuredImage: '/images/blog/featured.jpg', headerImage: '/images/blog-header.jpg' }
                 };
                 const defaultObj = defaults[key] || { title: "New Content", content: "" };
                 setJsonContent(JSON.stringify(defaultObj, null, 4));

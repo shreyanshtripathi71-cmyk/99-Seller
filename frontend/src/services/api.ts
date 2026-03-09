@@ -3,7 +3,7 @@
  * Standardized to Port 5001
  */
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').replace(/\/$/, '');
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').trim().replace(/\/$/, '');
 console.log(`[FRONTEND] Using API URL: ${API_BASE_URL}`);
 
 // Token management

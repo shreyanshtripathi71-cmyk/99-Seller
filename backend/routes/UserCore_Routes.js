@@ -9,6 +9,23 @@ const { protect, optionalAuth } = require('../middleware/auth');
  * ==========================================
  */
 
+// Public Content (readable by frontend without auth)
+router.get('/content/:key', async (req, res) => {
+    try {
+        const db = require('../models');
+        const content = await db.SiteContent.findOne({ where: { key: req.params.key } });
+        if (!content) return res.status(404).json({ success: false, error: 'Content not found' });
+        let value = content.value;
+        if (typeof value === 'string') {
+            try { value = JSON.parse(value); } catch (e) { /* keep as string */ }
+        }
+        res.json({ success: true, data: { key: content.key, value } });
+    } catch (err) {
+        console.error('Public content fetch error:', err);
+        res.status(500).json({ success: false, error: 'Server Error' });
+    }
+});
+
 router.post('/auth/login', userController.login);
 router.post('/auth/register', userController.register);
 router.post('/auth/forgot-password', (req, res) => res.json({ success: true, message: 'Placeholder' }));

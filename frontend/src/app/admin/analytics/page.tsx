@@ -18,6 +18,7 @@ import {
 import { Line, Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 import { DASHBOARD_THEME } from "@/components/admin/theme";
+import styles from './analytics.module.css';
 
 ChartJS.register(
   CategoryScale,
@@ -111,15 +112,6 @@ const AdminAnalyticsPage = () => {
     }
   };
 
-  const formatCurrency = (value: number | undefined | null) => {
-    if (value === undefined || value === null) return "$0";
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
-
   if (loading) {
     return (
       <div style={{
@@ -137,28 +129,18 @@ const AdminAnalyticsPage = () => {
     );
   }
 
-  // --- Styles ---
-  const containerStyle: React.CSSProperties = {
-    padding: "32px",
-    maxWidth: 1400,
-    margin: "0 auto",
-    fontFamily: "'Inter', sans-serif",
-    background: DASHBOARD_THEME.mainBg,
-    minHeight: "100vh"
-  };
-
   const cardStyle: React.CSSProperties = {
     background: DASHBOARD_THEME.cardBg,
     borderRadius: 12,
-    padding: 24, // Consistent with dashboard
+    padding: 24,
     border: `1px solid ${DASHBOARD_THEME.cardBorder}`,
     boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={styles.container} style={{ background: DASHBOARD_THEME.mainBg }}>
       {/* Header */}
-      <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className={styles.header}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: DASHBOARD_THEME.textPrimary, margin: "0 0 4px 0" }}>
             Analytics Overview
@@ -178,13 +160,8 @@ const AdminAnalyticsPage = () => {
         </div>
       )}
 
-      {/* KPI Grid - Compact */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        gap: 20,
-        marginBottom: 24
-      }}>
+      {/* KPI Grid */}
+      <div className={styles.kpiGrid}>
         <StatCard
           icon="fa-users"
           color={DASHBOARD_THEME.info}
@@ -199,7 +176,7 @@ const AdminAnalyticsPage = () => {
           bg="#ecfdf5"
           label="Properties"
           value={propertyStats?.totalProperties || 0}
-          growth="+5.2"
+          growth="5.2"
         />
         <StatCard
           icon="fa-bolt"
@@ -207,7 +184,7 @@ const AdminAnalyticsPage = () => {
           bg="#f5f3ff"
           label="Active Subs"
           value={subscriptionStats?.activeSubscriptions || 0}
-          growth="+8.1"
+          growth="8.1"
         />
         <StatCard
           icon="fa-chart-line"
@@ -215,14 +192,13 @@ const AdminAnalyticsPage = () => {
           bg="#fffbeb"
           label="Est. Monthly"
           value={subscriptionStats?.monthlyRevenue || 0}
-          growth="+12.4"
+          growth="12.4"
           isCurrency
         />
       </div>
 
       {/* Charts Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))", gap: 24, marginBottom: 24 }}>
-
+      <div className={styles.chartsGrid}>
         {/* Revenue Chart */}
         <div style={{ ...cardStyle, minHeight: 350, display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
@@ -240,7 +216,7 @@ const AdminAnalyticsPage = () => {
                     backgroundColor: (context: any) => {
                       const ctx = context.chart.ctx;
                       const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                      gradient.addColorStop(0, 'rgba(37, 99, 235, 0.1)'); // Lighter fill
+                      gradient.addColorStop(0, 'rgba(37, 99, 235, 0.1)');
                       gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
                       return gradient;
                     },
@@ -300,8 +276,8 @@ const AdminAnalyticsPage = () => {
         </div>
       </div>
 
-      {/* Platform Dynamics - Compact Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24 }}>
+      {/* Platform Dynamics */}
+      <div className={styles.metricsGrid}>
         <MetricBox label="Conversion Rate" value={`${subscriptionStats?.conversionRate?.toFixed(1) || 0}%`} sub="Paid / Total" />
         <MetricBox label="Avg. Revenue" value={`$${((subscriptionStats?.monthlyRevenue || 0) / (subscriptionStats?.activeSubscriptions || 1)).toFixed(0)}`} sub="Per Subscriber" />
         <MetricBox label="Active Trials" value={subscriptionStats?.trialingSubscriptions || 0} sub="Potential Leads" />
@@ -310,7 +286,7 @@ const AdminAnalyticsPage = () => {
   );
 };
 
-// --- Sub-components (Compact) ---
+// --- Sub-components ---
 
 const StatCard = ({ icon, color, bg, label, value, growth, isCurrency }: any) => (
   <div
